@@ -1,78 +1,101 @@
-# SoulInTime client and MCP
+# Test without creating
 
-SoulInTime dates bytes by Bitcoin block height. The receipt shows that these exact bytes existed by that block. It does not show that the contents are true.
+Sealed hash: `019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f`
 
-## Test without creating
+Live receipt: [https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305](https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305) (block 965906)
 
-This reads an existing sealed receipt. It does not create anything, and it needs no account or key:
+Citation rule: cite `slug@height` only when status is `confirmed` and `proofFile` exists; otherwise refuse.
+
+Check it on the web: [https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f](https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f)
+
+Hosted MCP: [https://soulintime.com/functions/mcp](https://soulintime.com/functions/mcp). Point any MCP client that supports remote Streamable HTTP servers at this URL. No key is needed. Call `verify` with the sealed hash.
+
+Local MCP package: [https://soulintime.com/functions/mcpDownload](https://soulintime.com/functions/mcpDownload)
+
+Running the reference client creates a receipt. The curl below does not.
+
+The `.ots` proof verifies without this host.
 
 ```
 curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'
 ```
 
-Expected: `"status":"confirmed"`, `"blockHeight":965906`, slug `a-hash-is-a-door-that-2026-019bd305`, and a `proofFile`.
-Receipt page: https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305
+Expected: `"status":"confirmed"`, `"blockHeight":965906`, `"slug":"a-hash-is-a-door-that-2026-019bd305"`, and a `proofFile`.
 
-Check it yourself, without us:
+## Proof download and check
+
+Download the proof: [a-hash-is-a-door-that-2026-019bd305.ots](https://soulintime.com/functions/v1Proof?id=a-hash-is-a-door-that-2026-019bd305&ots=1)
 
 ```
-curl -L -o door.ots 'https://soulintime.com/functions/v1Proof?id=a-hash-is-a-door-that-2026-019bd305&ots=1'
-ots verify -d 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f door.ots
+ots verify -d 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f a-hash-is-a-door-that-2026-019bd305.ots
 ```
 
-(`pip install opentimestamps-client` gives you `ots`. Without a Bitcoin node, run `ots info door.ots` and compare the merkle root it prints with block 965906 on any block explorer.)
+`ots` comes from `pip install opentimestamps-client`. Without a Bitcoin node, run `ots info` and compare the merkle root with block 965906 on any explorer.
 
-## Citation rule (refuse otherwise)
+## Refusal (copy this)
 
-- Cite `slug@height` only when v1Verify returns `status` `confirmed`, a positive `blockHeight` and a `proofFile`. Example: `a-hash-is-a-door-that-2026-019bd305@965906`.
-- If a receipt is pending, `height_asserted`, missing, or has no proof file, refuse to cite it. Say it is pending or missing.
-- The chain tip is never a receipt's height. A caption or date is not proof.
-- `first_at` (v1FirstAt) returns the earliest confirmed public receipt for a hash at or before height N. It is not a global history of the bytes. Unlisted and private receipts never appear in it.
-- No keys. Only the SHA-256 is sent; your file bytes stay with you. Checking is free.
+When a receipt is pending, `height_asserted`, missing, or has no proof file, an agent should say:
 
-## Hosted MCP
+> "I will not cite a height for this hash. Status is not confirmed or no proofFile exists."
 
-`https://soulintime.com/functions/mcp`: stateless Streamable HTTP (POST). It has three tools:
-- `verify(hash)`: read-only.
-- `first_at(hash, height?)`: read-only.
-- `stamp(hash)`: creates a receipt. It is never an evaluation call.
+Further rules:
+- The chain tip is never a receipt's height.
+- A caption or a date is not proof.
+- A height dates the bytes; it does not show that the contents are true.
+- `first_at` (v1FirstAt) returns the earliest confirmed **public** receipt for a hash at or before height N. It is not a global history, and unlisted and private receipts never appear in it.
+- No keys. Only the SHA-256 is sent.
 
-Notes:
-- To evaluate, use `verify` with the hash above.
-- Hosted calls share the backend's network egress and may share the upstream rate limit. There is no per-user allowance. Respect 429 and `X-RateLimit-Reset`.
+The MCP tools (hosted and local) check this rule against server metadata only. They do not cryptographically verify the `.ots`; for that, use `ots verify`.
 
-## Local MCP (`mcp-local/`)
+## Rate limits
 
-This is the source of the same 0.1.0 package that is downloadable from https://soulintime.com/functions/mcpDownload. It speaks stdio. See `mcp-local/README.md` for install, host configuration and tests.
+Creating is limited; reads are not unlimited either.
 
-The packaged README text predates the hosted endpoint and says no hosted endpoint is claimed. The hosted MCP above now exists, and it is separate.
+Creating a receipt (createMoment):
+- The limit is one fresh hash per network per hour.
+- A second create inside that hour, or a hash that already has a receipt, returns `429` with the existing slug when that receipt is not private.
+- `already_stamped` is permanent and does not clear when the hour resets. Read the existing receipt instead.
 
-Differences from the hosted MCP:
-- Both only check the citation against server metadata. Neither downloads or cryptographically verifies the `.ots`.
-- The hosted MCP also requires `proofFile` to be the canonical `https://soulintime.com/functions/v1Proof?id=<slug>&ots=1` URL. The local package does not check this.
+Reading (v1Verify):
+- Responses carry `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` (Unix seconds). A read we observed carried `X-RateLimit-Limit: 120`. The window isn't documented, so follow the headers.
 
-Tests: `test_http.py` mocks all HTTP. `test_protocol.py` mocks every stamp and every case but the last one, which is one live read-only `verify` GET of the hash above. It never makes a live POST.
+On 429:
+- Wait until `X-RateLimit-Reset` and don't tight-loop.
+- Hosted MCP calls share the backend's network egress, so they may share the upstream allowance. There is no per-user allowance.
 
-## Reference client (`reference-client/soulintime_client.py`)
+Checking stays free. More volume than the free rate needs a paid path, which isn't offered yet.
 
-This is the same code that is published in https://soulintime.com/llms.txt, and it uses the standard library only.
+## Hosted vs local MCP
 
-How it works:
-- It hashes locally and **POSTs the hash to createMoment, so running it creates a receipt.**
-- It then polls v1Verify until the receipt is confirmed or failed, and saves the `.ots`.
-- It prints CONFIRMED only for `confirmed` with a `proofFile`.
+Hosted (`/functions/mcp`):
+- Stateless Streamable HTTP over POST.
+- Tools `verify(hash)` and `first_at(hash, height?)` are read-only.
+- `stamp(hash)` creates a receipt and is never an evaluation call.
 
-Effects:
-- One fresh hash per network per hour.
-- An accepted stamp is a new registry entry, unlisted by default, and it will get calendar commitments.
-- To test without side effects, use the curl above, not this script.
+Local (`mcp-local/`):
+- This is the source of the same 0.1.0 package served by the download link. It speaks stdio.
+- See `mcp-local/README.md` for setup. That README predates the hosted endpoint.
+- The hosted MCP also checks that `proofFile` is the canonical `v1Proof?id=<slug>&ots=1` URL. The local one does not.
 
-## Limits
+Tests:
+- `test_http.py` mocks all HTTP.
+- `test_protocol.py` mocks every stamp. Its last case is one live read-only `verify` GET of the sealed hash, which runs when you run the file. It never makes a live POST.
 
-- Registry queries (v1Verify, v1FirstAt, Firsts) depend on soulintime.com. A downloaded `.ots` stays checkable with any OpenTimestamps client if this host disappears.
-- Stamp is covered only by mocked tests here. These tests make no real stamps.
-- API contract: https://soulintime.com/llms.txt and https://soulintime.com/.well-known/openapi.yaml
+## Reference client
+
+`reference-client/soulintime_client.py` is the same code published in [llms.txt](https://soulintime.com/llms.txt), standard library only. Running it **creates a receipt**:
+- It POSTs the hash to createMoment.
+- It polls v1Verify and saves the `.ots`.
+- An accepted stamp is a new registry entry, unlisted by default.
+
+To test without side effects, use the curl at the top instead.
+
+## Host dependence
+
+Registry queries (v1Verify, v1FirstAt, Firsts) depend on soulintime.com. A downloaded `.ots` stays checkable with any OpenTimestamps client without it.
+
+API contract: [llms.txt](https://soulintime.com/llms.txt) and [openapi.yaml](https://soulintime.com/.well-known/openapi.yaml).
 
 ## License
 
-Not yet chosen by the owner. No license is granted.
+[MIT](LICENSE)
