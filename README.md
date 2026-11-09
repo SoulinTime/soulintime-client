@@ -4,6 +4,8 @@ Sealed hash: `019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f`
 
 Live receipt: [https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305](https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305) (block 965906)
 
+Latest sealed example: block 965906 (permanent test object).
+
 Citation rule: cite `slug@height` only when status is `confirmed` and `proofFile` exists; otherwise refuse.
 
 Check it on the web: [https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f](https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f)
@@ -21,6 +23,12 @@ curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fc
 ```
 
 Expected: `"status":"confirmed"`, `"blockHeight":965906`, `"slug":"a-hash-is-a-door-that-2026-019bd305"`, and a `proofFile`.
+
+## Run locally
+
+- Local stdio MCP server, same read-only `verify` and `first_at` tools: see [mcp-local/README.md](mcp-local/README.md).
+- Setup: `python3 -m venv .venv && .venv/bin/python -m pip install -r requirements.txt && .venv/bin/python server.py` inside `mcp-local/`.
+- Then call `verify` with the sealed hash above; `stamp` creates a receipt.
 
 ## Proof download and check
 
@@ -66,6 +74,8 @@ On 429:
 Checking stays free. More volume than the free rate needs a paid path, which isn't offered yet.
 
 Need more than the free rate? Email Soulintimeofficial@gmail.com with the hash and the use.
+
+Volume brief (test without creating, free limits, what to email): [volume-brief.md](volume-brief.md)
 
 ## Hosted vs local MCP
 
