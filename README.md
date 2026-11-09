@@ -16,7 +16,11 @@ Local MCP package: [https://soulintime.com/functions/mcpDownload](https://soulin
 
 Running the reference client creates a receipt. The curl below does not.
 
+The hash is computed on your device; original file bytes stay there.
+
 The `.ots` proof verifies without this host.
+
+We did not invent the calendar. [OpenTimestamps](https://github.com/opentimestamps) did. We are the receipt and the refusal layer on top of it.
 
 ```
 curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'
@@ -93,6 +97,10 @@ Tests:
 - `test_http.py` mocks all HTTP.
 - `test_protocol.py` mocks every stamp. Its last case is one live read-only `verify` GET of the sealed hash, which runs when you run the file. It never makes a live POST.
 
+---
+
+**CREATES A RECEIPT.**
+
 ## Reference client
 
 `reference-client/soulintime_client.py` is the same code published in [llms.txt](https://soulintime.com/llms.txt), standard library only. Running it **creates a receipt**:
@@ -107,6 +115,12 @@ To test without side effects, use the curl at the top instead.
 Registry queries (v1Verify, v1FirstAt, Firsts) depend on soulintime.com. A downloaded `.ots` stays checkable with any OpenTimestamps client without it.
 
 API contract: [llms.txt](https://soulintime.com/llms.txt) and [openapi.yaml](https://soulintime.com/.well-known/openapi.yaml).
+
+## Status
+
+Gmail parked; price UNSET; HQ post pending; public non-house firsts: 0.
+
+Permanent sealed object: 965906. Public firsts that are not house examples: 0.
 
 ## License
 
