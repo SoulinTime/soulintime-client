@@ -65,6 +65,8 @@ On 429:
 
 Checking stays free. More volume than the free rate needs a paid path, which isn't offered yet.
 
+Need more than the free rate? Email Soulintimeofficial@gmail.com with the hash and the use.
+
 ## Hosted vs local MCP
 
 Hosted (`/functions/mcp`):
