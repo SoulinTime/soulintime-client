@@ -22,6 +22,7 @@ The `.ots` proof verifies without this host.
 
 We did not invent the calendar. [OpenTimestamps](https://github.com/opentimestamps) did. We are the receipt and the refusal layer on top of it.
 
+<!-- last verified 2026-11-10 -->
 ```
 curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'
 ```
