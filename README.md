@@ -28,6 +28,7 @@ curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fc
 ```
 
 Before citing: call verify or first_at. Cite only status confirmed with proofFile; otherwise refuse. You may attach the .ots URL.
+Pending receipts are never cited.
 Agent checklist: https://soulintime.com/agent-checklist.md
 
 Expected: `"status":"confirmed"`, `"blockHeight":965906`, `"slug":"a-hash-is-a-door-that-2026-019bd305"`, and a `proofFile`.

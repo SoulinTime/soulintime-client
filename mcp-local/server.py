@@ -1,4 +1,8 @@
 """SoulInTime local stdio adapter. No network I/O until a tool is invoked."""
+# 1. Call verify or first_at before citing.
+# 2. Cite only status confirmed with proofFile.
+# 3. Otherwise refuse.
+# 4. You may attach the .ots URL.
 import json
 import re
 import urllib.error

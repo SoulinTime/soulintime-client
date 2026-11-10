@@ -22,7 +22,7 @@ a = p.parse_args()
 h = hashlib.sha256(sys.stdin.buffer.read() if a.file == "-" else open(a.file, "rb").read()).hexdigest()  # the file bytes never leave this machine
 s, r = call(F + "createMoment", {"sha256Hash": h})
 if s == 400: sys.exit("400: %s" % r.get("error"))
-if s == 429: print("429: %s slug=%s" % (r.get("error"), r.get("slug")))
+if s == 429: print("429: %s slug=%s" % (r.get("error"), r.get("slug"))); r.get("more") and print(r["more"])
 elif s >= 300: sys.exit("%d: %s" % (s, r))
 end, wait = time.time() + a.timeout, 60
 while True:

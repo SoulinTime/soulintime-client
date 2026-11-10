@@ -1,10 +1,38 @@
 # SoulInTime volume brief
 
+Evaluate with the Door hash before creating.
+
 ```
 curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'
 ```
 
 **1. Test without creating.** Check the sealed example first; nothing below creates a receipt. Sealed hash `019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f`, receipt https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305 (block 965906). Over plain HTTP: `curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'` should return `"status":"confirmed"`, `"blockHeight":965906` and a `proofFile`. Over the hosted MCP endpoint (https://soulintime.com/functions/mcp, stateless Streamable HTTP, no key), call the read-only `verify` tool: `curl -s -X POST https://soulintime.com/functions/mcp -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' --data '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"verify","arguments":{"hash":"019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"}}}'`. The proof file is at https://soulintime.com/functions/v1Proof?id=a-hash-is-a-door-that-2026-019bd305&ots=1 and verifies without this host: `ots verify -d 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f a-hash-is-a-door-that-2026-019bd305.ots`. Do not call `stamp` or POST createMoment to test; both create a receipt.
+
+Confirmed Door verify response (exact observed keys and example values; optional fields vary by receipt). Types: sha256Hash: string, hash: string, status: string, blockHeight: integer, proofFile: string, submitted: boolean, slug: string, url: string, firsts_url: string, proof: object, checkYourself: array of strings.
+
+```json
+{
+  "sha256Hash": "019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f",
+  "hash": "019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f",
+  "status": "confirmed",
+  "blockHeight": 965906,
+  "proofFile": "https://soulintime.com/functions/v1Proof?id=a-hash-is-a-door-that-2026-019bd305&ots=1",
+  "submitted": true,
+  "slug": "a-hash-is-a-door-that-2026-019bd305",
+  "url": "https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305",
+  "firsts_url": "https://soulintime.com/functions/v1FirstAt?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f",
+  "proof": {
+    "mempoolUrl": "https://mempool.space/block-height/965906",
+    "verifyUrl": "https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
+  },
+  "checkYourself": [
+    "curl -L -o proof.ots \"https://soulintime.com/functions/v1Proof?id=a-hash-is-a-door-that-2026-019bd305&ots=1\"",
+    "pip install opentimestamps-client || pipx install opentimestamps-client",
+    "ots verify -d 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f proof.ots",
+    "Without a node, run ots info proof.ots and compare the merkle root it prints for block 965906 with the same block on any block explorer."
+  ]
+}
+```
 
 **2. Free limits, as the code enforces them today.** Creating (createMoment, and the MCP `stamp` tool that calls it): one fresh hash per network per hour. A hash that already has a receipt answers `429` with `reason: already_stamped`; that is permanent and does not clear when the hour resets, so read the existing receipt instead. Checking (v1Verify, and the MCP `verify` tool): 120 lookups per IP per 60 seconds, best effort per server instance; every reply carries `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` (Unix seconds). v1FirstAt has no endpoint limit of its own; platform limits may still apply. Hosted MCP calls share the backend's egress, so they may share the upstream allowance. On a rate-limited `429` (not `already_stamped`), wait until `X-RateLimit-Reset` and do not tight-loop. Checking stays free. There is no paid volume offer today and no price.
 
