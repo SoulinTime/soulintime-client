@@ -2,6 +2,8 @@
 
 Standalone source, tested locally with official `mcp==2.3.0` on Python 3.13. Python 3.11+ recommended. No hosted MCP endpoint, public package listing, or published download is claimed. No GitHub account/repository or hosting required to run locally.
 
+Calling `stamp` creates a receipt. `verify` and `first_at` do not. Test with the sealed hash below; do not call `stamp` to evaluate.
+
 ## Install and launch
 Unzip into a directory you control. Create a virtual environment and install the pinned SDK:
 

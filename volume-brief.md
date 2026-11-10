@@ -8,8 +8,9 @@ curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fc
 
 **2. Free limits, as the code enforces them today.** Creating (createMoment, and the MCP `stamp` tool that calls it): one fresh hash per network per hour. A hash that already has a receipt answers `429` with `reason: already_stamped`; that is permanent and does not clear when the hour resets, so read the existing receipt instead. Checking (v1Verify, and the MCP `verify` tool): 120 lookups per IP per 60 seconds, best effort per server instance; every reply carries `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` (Unix seconds). v1FirstAt has no endpoint limit of its own; platform limits may still apply. Hosted MCP calls share the backend's egress, so they may share the upstream allowance. On `429`, wait until `X-RateLimit-Reset` and do not tight-loop. Checking stays free. There is no paid volume offer today and no price.
 
-**3. What to email.** If you need more than this, email Soulintimeofficial@gmail.com with: one hash you have already stamped or checked (the SHA-256, never the file), what you are dating and why, and how many fresh hashes per hour you expect (typical and peak). We answer by email. Nothing is charged, and no volume is promised, until terms are sent to you and you agree to them.
+**3. What to email.** If you need more than this, email morris@mifalai.com with: one hash you have already stamped or checked (the SHA-256, never the file), what you are dating and why, and how many fresh hashes per hour you expect (typical and peak). We answer by email. Nothing is charged, and no volume is promised, until terms are sent to you and you agree to them.
 
 Expected free limits: one fresh hash per network per hour; v1Verify 120 checks per IP per 60 seconds, best effort per instance.  
 “More” means rate / book / webhook; terms are not set and no paid capability is offered yet.  
-Email Soulintimeofficial@gmail.com for address and price.
+Email morris@mifalai.com for address and price.
+Issues welcome: https://github.com/SoulinTime/soulintime-client/issues

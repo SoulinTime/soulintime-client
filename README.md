@@ -26,6 +26,9 @@ We did not invent the calendar. [OpenTimestamps](https://github.com/opentimestam
 curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'
 ```
 
+Before citing: call verify or first_at. Cite only status confirmed with proofFile; otherwise refuse. You may attach the .ots URL.
+Agent checklist: https://soulintime.com/agent-checklist.md
+
 Expected: `"status":"confirmed"`, `"blockHeight":965906`, `"slug":"a-hash-is-a-door-that-2026-019bd305"`, and a `proofFile`.
 
 ## Run locally
@@ -77,9 +80,11 @@ On 429:
 
 Checking stays free. More volume than the free rate needs a paid path, which isn't offered yet.
 
-Need more than the free rate? Email Soulintimeofficial@gmail.com with the hash and the use.
+Need more than the free rate? Email morris@mifalai.com with the hash and the use.
 
 Volume brief (test without creating, free limits, what to email): [volume-brief.md](volume-brief.md)
+
+Issues welcome: https://github.com/SoulinTime/soulintime-client/issues
 
 ## Hosted vs local MCP
 
@@ -118,7 +123,7 @@ API contract: [llms.txt](https://soulintime.com/llms.txt) and [openapi.yaml](htt
 
 ## Status
 
-Gmail parked; price UNSET; HQ post pending; public non-house firsts: 0.
+Contact morris@mifalai.com; price UNSET; HQ post live; public non-house firsts: 0.
 
 Permanent sealed object: 965906. Public firsts that are not house examples: 0.
 
