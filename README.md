@@ -69,6 +69,7 @@ Proofs use OpenTimestamps: https://opentimestamps.org/
 
 ## Public destinations
 
+- [Whitepaper discussion](https://github.com/SoulinTime/soulintime-client/discussions/1) — curl + moment link only.
 - [Who this is for](https://soulintime.com/who) · [Benefits JSON](https://soulintime.com/benefits.json) · [Payment/unlock status](https://soulintime.com/status)
 - [Private book return page](https://soulintime.com/unlocked) (keep its key private).
 - Listed on: the [official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.MorrisMoe%2Fsoulintime/versions/latest) (`io.github.MorrisMoe/soulintime`) and [Glama](https://glama.ai/mcp/connectors/io.github.MorrisMoe/soulintime).

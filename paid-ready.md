@@ -32,6 +32,57 @@ A saved receipt consumes its reservation. A proven non-write rejection releases 
 
 Lightning remains manual at muddleddesign796@walletofsatoshi.com; per-invoice provider later. After independently verifying 21000 sats settled, an authenticated administrator may call `book10Admin` action=grant_lightning with settlement_confirmed=true, amount_sats=21000 and a unique payment_reference. It grants the same payer-only ten-credit book idempotently and logs unlock timestamp+method=lightning-manual. No manual grant was made during testing; no invoice callback or real payment was created.
 
+
+## Exact entitlement record (first real payment)
+
+The ledger is one admin-only `RateLimit` row, namespace `soulintime:book10:ledger:v1`, `count=0` permanently. Logical books live in `books[key]`. No runtime ledger creates. Public/status responses never include payer email.
+
+Card (signed webhook only). Key = SHA-256 of the Checkout `session_id`:
+
+```
+books[sha256(session_id)] = {
+  session_id,
+  payment_intent,          // Stripe pi_…
+  amount,                  // amount_total, may include tax
+  subtotal: 2000,          // USD cents; unexpected subtotal is not granted
+  currency: "usd",
+  created,                 // unlock timestamp
+  method: "stripe",
+  credits: 10,
+  used: 0,
+  active: true,
+  event_id,                // Stripe event id; also stored under events[sha256(event_id)] for idempotency
+  unlock: { timestamp, method: "stripe" },
+  reservations: {},
+  payer_email?             // only if Checkout supplied one; admin-only, never returned publicly
+}
+```
+
+Lightning (manual). After independently verifying 21000 sats settled, an authenticated administrator calls `book10Admin` action=`grant_lightning` with `settlement_confirmed=true`, `amount_sats=21000`, and a unique `payment_reference`. Key is derived from that reference. Same ten-credit book:
+
+```
+{
+  session_id: null,
+  payment_intent: null,
+  payment_reference,
+  amount: 21000,
+  currency: "sats",
+  created,
+  method: "lightning-manual",
+  credits: 10,
+  used: 0,
+  active: true,
+  unlock: { timestamp, method: "lightning-manual", admin_id },
+  reservations: {}
+}
+```
+
+`POST /functions/book10Status` returns only `credits`, `used`, `remaining`, `method`, `unlocked_at`, reserved `pending`, and the private `book_key`. Possession of the session id or key is authorization.
+
+First live webhook test = first real card payment. Do not send a synthetic or test-mode event to grant credit.
+
+On first real payment: unlock (automatic for an eligible card session; manual for Lightning after settlement), log the private entitlement, write one internal line, and do not post publicly unless Morris says.
+
 ## Tests and operations
 
 No test-mode Stripe account is available through the connector. The offline suite executes the actual webhook handler, pure state machine and createMoment admission wrapper against an in-memory store: valid signature accepted once, replay/session replay idempotent, bad/tampered/stale signatures refused, other payment links/unpaid sessions ignored, concurrency cannot grant or spend twice, ten-credit exhaustion, payer response privacy and unchanged free-first behavior. It also exercises the real nonce adapter with schema-restricted filters. These are dry-run results, not a real checkout or live synthetic entitlement.
