@@ -101,7 +101,7 @@ Further rules:
 - A caption or a date is not proof.
 - A height dates the bytes; it does not show that the contents are true.
 - `first_at` (v1FirstAt) returns the earliest confirmed **public** receipt for a hash at or before height N. It is not a global history, and unlisted and private receipts never appear in it.
-- No account or key is required to check. A private Book of 10 key is optional only when intentionally creating above the free allowance; original file bytes are not sent.
+- No account or key is required to check. A private stamp balance key is optional only when intentionally creating above the free allowance; original file bytes are not sent.
 
 The MCP tools (hosted and local) check this rule against server metadata only. They do not cryptographically verify the `.ots`; for that, use `ots verify`.
 
@@ -110,7 +110,7 @@ The MCP tools (hosted and local) check this rule against server metadata only. T
 Creating is limited; reads are not unlimited either.
 
 Creating a receipt (createMoment):
-- The free allowance is one fresh hash per network per hour. Optional private Book of 10 credits apply only above that allowance through REST; MCP tools are unchanged.
+- The free allowance is one fresh hash per network per hour. Optional private stamp balance credits apply only above that allowance through REST; MCP tools are unchanged.
 - A second create inside that hour, or a hash that already has a receipt, returns `429` with the existing slug when that receipt is not private.
 - `already_stamped` is permanent and does not clear when the hour resets. Read the existing receipt instead.
 
@@ -121,9 +121,9 @@ On 429:
 - For a true rate limit, wait until `X-RateLimit-Reset` and don't tight-loop. `already_stamped` instead means read the existing slug.
 - Hosted MCP calls share the backend's network egress, so they may share the upstream allowance. There is no per-user allowance.
 
-Checking stays free forever. See the public Book of 10 price above; fulfilment is manual and never changes receipt status.
+Checking stays free forever. See Monthly and Starter pricing above. Verified card payment unlocks only the purchased private balance and never changes receipt status. Lightning checkout is paused.
 
-Need more than the free rate? Email morris@mifalai.com with the hash and the use.
+Need more than the free rate? Choose Monthly at https://soulintime.com/pricing. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish a private key or payment reference.
 
 Volume brief (test without creating, free limits, what to email): [volume-brief.md](volume-brief.md)
 
@@ -166,7 +166,7 @@ API contract: [llms.txt](https://soulintime.com/llms.txt) and [openapi.yaml](htt
 
 ## Status
 
-Two sealed examples now exist. Bitcoin whitepaper abstract: moment-ao91b5a0@975352 (non-house); Door: 965906 (permanent test object). Contact morris@mifalai.com. Book of 10 = 21000 sats. HQ posts: [posts.md](posts.md). non-house firsts: 1. Last verified: 2026-11-11.
+Two sealed examples now exist. Bitcoin whitepaper abstract: moment-ao91b5a0@975352 (non-house); Door: 965906 (permanent test object). Questions: https://github.com/SoulinTime/soulintime-client/issues. Monthly is the primary offer; Starter remains available at https://soulintime.com/pricing. HQ posts: [posts.md](posts.md). non-house firsts: 1. Last verified: 2026-11-11.
 
 Permanent test object: Door at 965906. Non-house sealed example: moment-ao91b5a0@975352. Public firsts that are not house examples: 1.
 
