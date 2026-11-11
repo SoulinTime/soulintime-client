@@ -1,6 +1,8 @@
 # SoulInTime volume brief
 
-Evaluate with the Door hash before creating.
+Evaluate with the Door hash before creating. Two sealed examples now exist. Door is the permanent test object; Bitcoin whitepaper abstract is the non-house example. non-house firsts: 1. Last verified (both): 2026-11-11.
+
+<!-- last verified 2026-11-11 -->
 
 ```
 curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'
@@ -34,13 +36,30 @@ Confirmed Door verify response (exact observed keys and example values; optional
 }
 ```
 
-**2. Free limits, as the code enforces them today.** Creating (createMoment, and the MCP `stamp` tool that calls it): one fresh hash per network per hour. A hash that already has a receipt answers `429` with `reason: already_stamped`; that is permanent and does not clear when the hour resets, so read the existing receipt instead. Checking (v1Verify, and the MCP `verify` tool): 120 lookups per IP per 60 seconds, best effort per server instance; every reply carries `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` (Unix seconds). v1FirstAt has no endpoint limit of its own; platform limits may still apply. Hosted MCP calls share the backend's egress, so they may share the upstream allowance. On a rate-limited `429` (not `already_stamped`), wait until `X-RateLimit-Reset` and do not tight-loop. Checking stays free. There is no paid volume offer today and no price.
+### Second reference: Bitcoin whitepaper abstract (non-house)
+
+`moment-ao91b5a0@975352`; SHA-256 `d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa`. Receipt: https://soulintime.com/moment/moment-ao91b5a0
+proofFile: https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1
+
+<!-- last verified 2026-11-11 -->
+```sh
+curl -s 'https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa'
+```
+Expected: status confirmed, blockHeight 975352, proofFile. The Door at 965906 stays unchanged.
+
+**2. Free limits, as the code enforces them today.** Creating (createMoment, and the MCP `stamp` tool that calls it): one fresh hash per network per hour. A hash that already has a receipt answers `429` with `reason: already_stamped`; that is permanent and does not clear when the hour resets, so read the existing receipt instead. Checking (v1Verify, and the MCP `verify` tool): 120 lookups per IP per 60 seconds, best effort per server instance; every reply carries `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` (Unix seconds). v1FirstAt has no endpoint limit of its own; platform limits may still apply. Hosted MCP calls share the backend's egress, so they may share the upstream allowance. On a rate-limited `429` (not `already_stamped`), wait until `X-RateLimit-Reset` and do not tight-loop. Checking stays free. Book of 10 pricing is public below; free checking remains free forever.
 
 Legacy v1Anchor has a separate anonymous cap of 100 over a rolling 24 hours, counted from public, pending, ownerless rows rather than all anchors. This is not the createMoment allowance; no reset available.
 
-**3. What to email.** If you need more than this, email morris@mifalai.com with: one hash you have already stamped or checked (the SHA-256, never the file), what you are dating and why, and how many fresh hashes per hour you expect (typical and peak). We answer by email. Nothing is charged, and no volume is promised, until terms are sent to you and you agree to them.
+**3. What to email.** If you need more than this, email morris@mifalai.com with: one hash you have already stamped or checked (the SHA-256, never the file), what you are dating and why, and how many fresh hashes per hour you expect (typical and peak). For a paid Book of 10, send the payment reference and hash(es); fulfilment is manual after verifying payment, for that payer only.
 
 Expected free limits: one fresh hash per network per hour; v1Verify 120 checks per IP per 60 seconds, best effort per instance.  
-“More” means rate / book / webhook; terms are not set and no paid capability is offered yet.  
-Email morris@mifalai.com for address and price.
+Book of 10 covers ten submissions for the verified payer only; no new rate or webhook promise.
+Price and Lightning address are public at https://soulintime.com/pricing.
 Issues welcome: https://github.com/SoulinTime/soulintime-client/issues
+
+## Pricing
+
+Free check stays free forever, subject to existing read limits. Book of 10 = **21000 sats** to **muddleddesign796@walletofsatoshi.com** (Lightning, Wallet of Satoshi). Public price and copy buttons: https://soulintime.com/pricing — no email or login required to see the price.
+
+After paying, email morris@mifalai.com with the receipt number/payment reference and the hash(es), never the original files. Fulfilment is manual: payment must be verified before ten submissions are allocated to that payer only. No global limit changes. Payment never confirms, promotes or accelerates a receipt. Alternatively, pay **$20 USD by card**, plus sales tax where applicable: https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00 (one-time Stripe Checkout, no login).
