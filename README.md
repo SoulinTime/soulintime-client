@@ -52,6 +52,13 @@ Free check stays free forever, subject to existing read limits. Book of 10 = **2
 
 After paying, email morris@mifalai.com with the receipt number/payment reference and the hash(es), never the original files. Fulfilment is manual: payment must be verified before ten submissions are allocated to that payer only. No global limit changes. Payment never confirms, promotes or accelerates a receipt. Alternatively, pay **$20 USD by card**, plus sales tax where applicable: https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00 (one-time Stripe Checkout, no login).
 
+## Public destinations
+
+- [Homepage: whitepaper first, permanent Door beneath](https://soulintime.com/)
+- [Developers and Pricing](https://soulintime.com/developers) · [Pricing](https://soulintime.com/pricing)
+- [Agent contract](https://soulintime.com/agents.json) · [Discovery JSON](https://soulintime.com/.well-known/soulintime.json)
+- [Sitemap](https://soulintime.com/sitemap.xml) (both sealed examples).
+
 ## Run locally
 
 - Local stdio MCP server, same read-only `verify` and `first_at` tools: see [mcp-local/README.md](mcp-local/README.md).
@@ -99,7 +106,7 @@ On 429:
 - For a true rate limit, wait until `X-RateLimit-Reset` and don't tight-loop. `already_stamped` instead means read the existing slug.
 - Hosted MCP calls share the backend's network egress, so they may share the upstream allowance. There is no per-user allowance.
 
-Checking stays free forever. See the public Book of 10 price below; fulfilment is manual and never changes receipt status.
+Checking stays free forever. See the public Book of 10 price above; fulfilment is manual and never changes receipt status.
 
 Need more than the free rate? Email morris@mifalai.com with the hash and the use.
 
