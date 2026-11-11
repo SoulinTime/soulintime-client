@@ -30,13 +30,13 @@ Last verified: 2026-11-11. non-house firsts: 1.
 
 Free check stays free forever, subject to existing read limits. No account required to check or buy.
 
-Book of 10 = **21000 sats** to **muddleddesign796@walletofsatoshi.com** (Lightning, Wallet of Satoshi), or **$20 USD by card**, plus sales tax where applicable: https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00 (one-time Stripe Checkout). Price: https://soulintime.com/pricing
+Recommended: Monthly — 100 stamps / 30 days, $99 USD plus applicable tax by card: https://buy.stripe.com/eVqcN55pH73n2Kyfms8IU01. One payment, 30 days. No auto-renew. Buy again to continue. Lightning reference price: 168,000 sats; Lightning checkout is paused, do not pay. Starter pack — 10 stamps / 90 days: $20 USD plus applicable tax by card (https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00); Lightning reference price 21,000 sats. https://soulintime.com/pricing. Next review: 1 Jan 2027. No account required to check or buy. Verified card payment unlocks your private balance at https://soulintime.com/unlocked. Credits apply only above the existing free per-network allowance; global limits stay unchanged. Payment never confirms, promotes or accelerates a receipt. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish private payment references or keys.
 
 Prices fixed through 31 Dec 2026. Next review: 1 Jan 2027. Reviewed quarterly.
 
-Payments: self-serve. Unlock: automatic for card, manual for Lightning.
+Payments: self-serve by card. Lightning checkout is paused.
 
-Successful verified card Checkout automatically unlocks a private Book of 10 at https://soulintime.com/unlocked. Lightning stays manual after verified settlement; email morris@mifalai.com the payment reference, never original files. Per-invoice provider later. No automatic email is sent. Private book credits apply only above the normal free per-network allowance; no global limit changes.
+Verified card Checkout unlocks the purchased private stamp balance on /unlocked. No account required. Keep the private key secure.
 
 Keep the returned private book key securely. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <private book key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt. See https://soulintime.com/paid-ready.md for exact counters and the signed fulfillment path.
 
