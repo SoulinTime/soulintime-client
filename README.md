@@ -46,13 +46,32 @@ Expected: status confirmed, blockHeight 975352 and proofFile.
 
 /yours supports signed-out device receipts; account-owned receipts require sign-in.
 
-## Pricing
+## Pricing and private book status
 
-Free check stays free forever, subject to existing read limits. Book of 10 = **21000 sats** to **muddleddesign796@walletofsatoshi.com** (Lightning, Wallet of Satoshi). Public price and copy buttons: https://soulintime.com/pricing — no email or login required to see the price.
+Free check stays free forever, subject to existing read limits. No account required to check or buy.
 
-After paying, email morris@mifalai.com with the receipt number/payment reference and the hash(es), never the original files. Fulfilment is manual: payment must be verified before ten submissions are allocated to that payer only. No global limit changes. Payment never confirms, promotes or accelerates a receipt. Alternatively, pay **$20 USD by card**, plus sales tax where applicable: https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00 (one-time Stripe Checkout, no login).
+Book of 10 = **21000 sats** to **muddleddesign796@walletofsatoshi.com** (Lightning, Wallet of Satoshi), or **$20 USD by card**, plus sales tax where applicable: https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00 (one-time Stripe Checkout). Price: https://soulintime.com/pricing
+
+Prices fixed through 31 Dec 2026. Next review: 1 Jan 2027. Reviewed quarterly.
+
+Payments: self-serve. Unlock: automatic for card, manual for Lightning.
+
+Successful verified card Checkout automatically unlocks a private Book of 10 at https://soulintime.com/unlocked. Lightning stays manual after verified settlement; email morris@mifalai.com the payment reference, never original files. Per-invoice provider later. No automatic email is sent. Private book credits apply only above the normal free per-network allowance; no global limit changes.
+
+Keep the returned private book key securely. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <private book key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt. See https://soulintime.com/paid-ready.md for exact counters and the signed fulfillment path.
+
+## Who this is for
+
+Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Non-house firsts: 1. Last verified (both sealed examples): 2026-11-11.
+
+Proofs use OpenTimestamps: https://opentimestamps.org/
+
 
 ## Public destinations
+
+- [Who this is for](https://soulintime.com/who) · [Benefits JSON](https://soulintime.com/benefits.json) · [Payment/unlock status](https://soulintime.com/status)
+- [Private book return page](https://soulintime.com/unlocked) (keep its key private).
+- Listed on: the [official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.MorrisMoe%2Fsoulintime/versions/latest) (`io.github.MorrisMoe/soulintime`) and [Glama](https://glama.ai/mcp/connectors/io.github.MorrisMoe/soulintime).
 
 - [Homepage: whitepaper first, permanent Door beneath](https://soulintime.com/)
 - [Developers and Pricing](https://soulintime.com/developers) · [Pricing](https://soulintime.com/pricing)
@@ -86,7 +105,7 @@ Further rules:
 - A caption or a date is not proof.
 - A height dates the bytes; it does not show that the contents are true.
 - `first_at` (v1FirstAt) returns the earliest confirmed **public** receipt for a hash at or before height N. It is not a global history, and unlisted and private receipts never appear in it.
-- No keys. Only the SHA-256 is sent.
+- No account or key is required to check. A private Book of 10 key is optional only when intentionally creating above the free allowance; original file bytes are not sent.
 
 The MCP tools (hosted and local) check this rule against server metadata only. They do not cryptographically verify the `.ots`; for that, use `ots verify`.
 
@@ -95,7 +114,7 @@ The MCP tools (hosted and local) check this rule against server metadata only. T
 Creating is limited; reads are not unlimited either.
 
 Creating a receipt (createMoment):
-- The limit is one fresh hash per network per hour.
+- The free allowance is one fresh hash per network per hour. Optional private Book of 10 credits apply only above that allowance through REST; MCP tools are unchanged.
 - A second create inside that hour, or a hash that already has a receipt, returns `429` with the existing slug when that receipt is not private.
 - `already_stamped` is permanent and does not clear when the hour resets. Read the existing receipt instead.
 

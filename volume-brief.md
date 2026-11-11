@@ -51,15 +51,29 @@ Expected: status confirmed, blockHeight 975352, proofFile. The Door at 965906 st
 
 Legacy v1Anchor has a separate anonymous cap of 100 over a rolling 24 hours, counted from public, pending, ownerless rows rather than all anchors. This is not the createMoment allowance; no reset available.
 
-**3. What to email.** If you need more than this, email morris@mifalai.com with: one hash you have already stamped or checked (the SHA-256, never the file), what you are dating and why, and how many fresh hashes per hour you expect (typical and peak). For a paid Book of 10, send the payment reference and hash(es); fulfilment is manual after verifying payment, for that payer only.
+**3. What to email.** If you need more than this, email morris@mifalai.com with: one hash you have already stamped or checked (the SHA-256, never the file), what you are dating and why, and how many fresh hashes per hour you expect (typical and peak). For a Lightning Book of 10, send the payment reference for manual settlement verification; card Checkout unlocks a private book automatically after verified payment.
 
 Expected free limits: one fresh hash per network per hour; v1Verify 120 checks per IP per 60 seconds, best effort per instance.  
-Book of 10 covers ten submissions for the verified payer only; no new rate or webhook promise.
+Book of 10 covers ten additional submissions for the verified payer only, above the normal free rate. A signed Stripe webhook unlocks paid card books; global limits stay unchanged.
 Price and Lightning address are public at https://soulintime.com/pricing.
 Issues welcome: https://github.com/SoulinTime/soulintime-client/issues
 
-## Pricing
+## Pricing and private book status
 
-Free check stays free forever, subject to existing read limits. Book of 10 = **21000 sats** to **muddleddesign796@walletofsatoshi.com** (Lightning, Wallet of Satoshi). Public price and copy buttons: https://soulintime.com/pricing — no email or login required to see the price.
+Free check stays free forever, subject to existing read limits. No account required to check or buy.
 
-After paying, email morris@mifalai.com with the receipt number/payment reference and the hash(es), never the original files. Fulfilment is manual: payment must be verified before ten submissions are allocated to that payer only. No global limit changes. Payment never confirms, promotes or accelerates a receipt. Alternatively, pay **$20 USD by card**, plus sales tax where applicable: https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00 (one-time Stripe Checkout, no login).
+Book of 10 = **21000 sats** to **muddleddesign796@walletofsatoshi.com** (Lightning, Wallet of Satoshi), or **$20 USD by card**, plus sales tax where applicable: https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00 (one-time Stripe Checkout). Price: https://soulintime.com/pricing
+
+Prices fixed through 31 Dec 2026. Next review: 1 Jan 2027. Reviewed quarterly.
+
+Payments: self-serve. Unlock: automatic for card, manual for Lightning.
+
+Successful verified card Checkout automatically unlocks a private Book of 10 at https://soulintime.com/unlocked. Lightning stays manual after verified settlement; email morris@mifalai.com the payment reference, never original files. Per-invoice provider later. No automatic email is sent. Private book credits apply only above the normal free per-network allowance; no global limit changes.
+
+Keep the returned private book key securely. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <private book key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt. See https://soulintime.com/paid-ready.md for exact counters and the signed fulfillment path.
+
+## Who this is for
+
+Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Non-house firsts: 1. Last verified (both sealed examples): 2026-11-11.
+
+Proofs use OpenTimestamps: https://opentimestamps.org/
