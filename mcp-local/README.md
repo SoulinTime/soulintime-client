@@ -48,4 +48,4 @@ Height is not a truth claim. Tip is never this file’s height. API availability
 ```
 `test_protocol.py` runs real official SDK client → stdio subprocess server → initialize/tools/list/tools/call. All stamp calls are fixture-mocked, with unexpected requests rejected. It ends with ONE LIVE GET verify probe for Door, writes door_probe.json, and never does a live POST. Do not count that as M1. `test_http.py` mocks transport and checks bounded body, fixed origin, timeout, 429 body/reset preservation, one request and redirects. Actual output included.
 
-Receipt issues: morris@mifalai.com (include the slug and the hash).
+Receipt issues: https://github.com/SoulinTime/soulintime-client/issues (include the slug and the hash).

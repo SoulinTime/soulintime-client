@@ -1,6 +1,6 @@
 # Test without creating
 
-Two sealed examples now exist. **Non-house example: Bitcoin whitepaper abstract**, [`moment-ao91b5a0@975352`](https://soulintime.com/moment/moment-ao91b5a0). SHA-256 `d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa`. [Download .ots](https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1). Last verified: 2026-11-11.
+Two sealed examples now exist. **Non-house example: Bitcoin whitepaper abstract**, [`moment-ao91b5a0@975352`](https://soulintime.com/moment/moment-ao91b5a0). SHA-256 `d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa`. [Download .ots](https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1). Last verified: 2026-11-12.
 
 The Door below remains the permanent test object at block 965906.
 
@@ -26,7 +26,7 @@ The `.ots` proof verifies without this host.
 
 We did not invent the calendar. [OpenTimestamps](https://github.com/opentimestamps) did. We are the receipt and the refusal layer on top of it.
 
-<!-- last verified 2026-11-11 -->
+<!-- last verified 2026-11-12 -->
 ```
 curl -s 'https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f'
 ```
@@ -37,7 +37,7 @@ Agent checklist: https://soulintime.com/agent-checklist.md
 
 Expected: `"status":"confirmed"`, `"blockHeight":965906`, `"slug":"a-hash-is-a-door-that-2026-019bd305"`, and a `proofFile`.
 
-<!-- last verified 2026-11-11 -->
+<!-- last verified 2026-11-12 -->
 Second example (read only):
 ```sh
 curl -s 'https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa'
@@ -50,14 +50,14 @@ Expected: status confirmed, blockHeight 975352 and proofFile.
 
 Free check stays free forever, subject to existing read limits. No account required to check or buy.
 
-Recommended: Monthly — 100 stamps / 30 days, $99 USD plus applicable tax by card: https://buy.stripe.com/eVqcN55pH73n2Kyfms8IU01. One payment, 30 days. No auto-renew. Buy again to continue. Lightning reference price: 168,000 sats; Lightning checkout is paused, do not pay. Starter pack — 10 stamps / 90 days: $20 USD plus applicable tax by card (https://buy.stripe.com/7sY6oH9FXcnH1Gu7U08IU00); Lightning reference price 21,000 sats. https://soulintime.com/pricing. Next review: 1 Jan 2027. No account required to check or buy. Verified card payment unlocks your private balance at https://soulintime.com/unlocked. Credits apply only above the existing free per-network allowance; global limits stay unchanged. Payment never confirms, promotes or accelerates a receipt. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish private payment references or keys.
+Paid stamp balances, each a one-time payment with no auto-renew (buy again to continue): Monthly — 100 stamps / 30 days, $49 USD; Yearly — 1500 stamps / 365 days, $399 USD, best for teams and agents; Starter pack — 10 stamps / 90 days, $20 USD. Card prices plus applicable tax. Lightning: coming soon. Prices and checkout: https://soulintime.com/pricing. Prices effective 12 Nov 2026. Next review: 1 Feb 2027. No account required to check or buy. Verified card payment unlocks your private balance at https://soulintime.com/unlocked. Credits apply only above the existing free per-network allowance; global limits stay unchanged. Payment never confirms, promotes or accelerates a receipt. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish private payment references or keys.
 
 
-Keep the returned private book key securely. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <private book key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt. See https://soulintime.com/paid-ready.md for exact counters and the signed fulfillment path.
+After payment, /unlocked shows your stamps and expiry; there is no account login yet, so keep the balance key it shows. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <private book key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt. See https://soulintime.com/paid-ready.md for exact counters and the signed fulfillment path.
 
 ## Who this is for
 
-Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Non-house firsts: 1. Last verified (both sealed examples): 2026-11-11.
+Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Non-house firsts: 1. Last verified (both sealed examples): 2026-11-12.
 
 Proofs use OpenTimestamps: https://opentimestamps.org/
 
@@ -66,8 +66,10 @@ Proofs use OpenTimestamps: https://opentimestamps.org/
 
 - [Whitepaper discussion](https://github.com/SoulinTime/soulintime-client/discussions/1) — curl + moment link only.
 - [Who this is for](https://soulintime.com/who) · [Benefits JSON](https://soulintime.com/benefits.json) · [Payment/unlock status](https://soulintime.com/status)
-- [Private balance return page](https://soulintime.com/unlocked) (keep its key private).
-- Listed on: the [official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.MorrisMoe%2Fsoulintime/versions/latest) (`io.github.MorrisMoe/soulintime`) and [Glama](https://glama.ai/mcp/connectors/io.github.MorrisMoe/soulintime).
+- [Balance page after payment](https://soulintime.com/unlocked)
+- [For agents](https://soulintime.com/for-agents) · [For firms](https://soulintime.com/for-firms)
+- Listed on: the [official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.MorrisMoe%2Fsoulintime/versions/latest) (`io.github.MorrisMoe/soulintime`), [mcpservers.org](https://mcpservers.org/servers/soulintime/soulintime-client) and [Glama](https://glama.ai/mcp/connectors/io.github.MorrisMoe/soulintime).
+- How agents find us: MCP Registry, mcpservers.org, Glama, and [llms.txt](https://soulintime.com/llms.txt).
 
 - [Homepage: whitepaper first, permanent Door beneath](https://soulintime.com/)
 - [Developers and Pricing](https://soulintime.com/developers) · [Pricing](https://soulintime.com/pricing)
@@ -123,7 +125,7 @@ On 429:
 
 Checking stays free forever. See Monthly and Starter pricing above. Verified card payment unlocks only the purchased private balance and never changes receipt status. Lightning checkout is paused.
 
-Need more than the free rate? Choose Monthly at https://soulintime.com/pricing. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish a private key or payment reference.
+Need more than the free rate? Monthly, Yearly or Starter at https://soulintime.com/pricing. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish a private key or payment reference.
 
 Volume brief (test without creating, free limits, what to email): [volume-brief.md](volume-brief.md)
 
@@ -166,7 +168,7 @@ API contract: [llms.txt](https://soulintime.com/llms.txt) and [openapi.yaml](htt
 
 ## Status
 
-Two sealed examples now exist. Bitcoin whitepaper abstract: moment-ao91b5a0@975352 (non-house); Door: 965906 (permanent test object). Questions: https://github.com/SoulinTime/soulintime-client/issues. Monthly is the primary offer; Starter remains available at https://soulintime.com/pricing. HQ posts: [posts.md](posts.md). non-house firsts: 1. Last verified: 2026-11-11.
+Two sealed examples now exist. Bitcoin whitepaper abstract: moment-ao91b5a0@975352 (non-house); Door: 965906 (permanent test object). Questions: https://github.com/SoulinTime/soulintime-client/issues. Monthly is the primary offer; Starter remains available at https://soulintime.com/pricing. HQ posts: [posts.md](posts.md). non-house firsts: 1. Last verified: 2026-11-12.
 
 Permanent test object: Door at 965906. Non-house sealed example: moment-ao91b5a0@975352. Public firsts that are not house examples: 1.
 
