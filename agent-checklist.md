@@ -28,17 +28,17 @@ Last verified: 2026-11-12. non-house firsts: 1.
 
 ## Pricing and private book status
 
-Free check stays free forever, subject to existing read limits. No account required to check or buy.
+Free check stays free forever, subject to existing read limits. No account required to check. Account recommended after payment to see your stamps.
 
-Paid stamp balances, each a one-time payment with no auto-renew (buy again to continue): Monthly — 100 stamps / 30 days, $49 USD; Yearly — 1500 stamps / 365 days, $399 USD, best for teams and agents; Starter pack — 10 stamps / 90 days, $20 USD. Card prices plus applicable tax. Lightning: coming soon. Prices and checkout: https://soulintime.com/pricing. Prices effective 12 Nov 2026. Next review: 1 Feb 2027. No account required to check or buy. Verified card payment unlocks your private balance at https://soulintime.com/unlocked. Credits apply only above the existing free per-network allowance; global limits stay unchanged. Payment never confirms, promotes or accelerates a receipt. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish private payment references or keys.
+Paid stamp balances, each a one-time payment with no auto-renew (buy again to continue): Monthly — 100 stamps / 30 days, $49 USD; Yearly — 1500 stamps / 365 days, $399 USD, best for teams and agents; Starter pack — 10 stamps / 90 days, $20 USD. Card prices plus applicable tax. Lightning: coming soon. Prices and checkout: https://soulintime.com/pricing. Prices effective 12 Nov 2026. Next review: 1 Feb 2027. No account required to check. Account recommended after payment to see your stamps. Verified card payment attaches your stamps to the email used at Checkout; sign in with Google at https://soulintime.com/account to see stamps left, expiry, receipts and a download of all proofs. Credits apply only above the existing free per-network allowance; global limits stay unchanged. Payment never confirms, promotes or accelerates a receipt. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish private payment references or keys.
 
 Prices effective 12 Nov 2026. Next review: 1 Feb 2027.
 
 Payments: self-serve by card at https://soulintime.com/pricing. Lightning: coming soon.
 
-After verified card payment, https://soulintime.com/unlocked shows the stamps and expiry of the purchased balance. No account required.
+After verified card payment, sign in with Google at https://soulintime.com/account to see stamps left, expiry, receipts and download all proofs. Checking never needs an account.
 
-Keep the returned private book key securely. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <private book key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt. See https://soulintime.com/paid-ready.md for exact counters and the signed fulfillment path.
+Signed-in browsers spend account stamps automatically; API callers send `X-SoulInTime-Book: <balance key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt.
 
 ## How agents find us
 
