@@ -20,7 +20,7 @@ curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61
 Expect: `"status":"confirmed"`, `"blockHeight":975352`, `"slug":"moment-ao91b5a0"`, and a `proofFile`.
 .ots: https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1
 
-## 3. Mutation (expect refusal)
+## 3. Optional: one-byte mutation (expect refusal)
 
 Change one byte of the abstract or hash and verify returns HTTP 404 `{"error":"not_found"}`: not confirmed, do not cite.
 
