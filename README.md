@@ -1,6 +1,8 @@
 # Test without creating
 
-Two sealed examples now exist. **Non-house example: Bitcoin whitepaper abstract**, [`moment-ao91b5a0@975352`](https://soulintime.com/moment/moment-ao91b5a0). SHA-256 `d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa`. [Download .ots](https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1). Last verified: 2026-11-12.
+**People: check a real receipt in 60 seconds, in your browser, no account: https://soulintime.com/check**
+
+Two sealed examples now exist. **Public example: Bitcoin whitepaper abstract** (a text SoulInTime did not write), [`moment-ao91b5a0@975352`](https://soulintime.com/moment/moment-ao91b5a0). SHA-256 `d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa`. [Download .ots](https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1). Last verified: 2026-11-15.
 
 The Door below remains the permanent test object at block 965906.
 
@@ -8,7 +10,7 @@ Sealed hash: `019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f`
 
 Live receipt: [https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305](https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305) (block 965906)
 
-Latest sealed example: Bitcoin whitepaper abstract, moment-ao91b5a0 at block 975352 (non-house). Door: block 965906 (permanent test object).
+Latest sealed example: Bitcoin whitepaper abstract, moment-ao91b5a0 at block 975352 (public example). Door: block 965906 (permanent test object).
 
 Citation rule: cite `slug@height` only when status is `confirmed` and `proofFile` exists; otherwise refuse.
 
@@ -57,7 +59,7 @@ After payment, sign in with Google at https://soulintime.com/account to see stam
 
 ## Who this is for
 
-Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Two public receipts, sealed in Bitcoin. Last verified: 2026-11-12.
+Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Two public receipts, sealed in Bitcoin. Last verified: 2026-11-15. Example texts to try: [examples/](examples/).
 
 Proofs use OpenTimestamps: https://opentimestamps.org/
 
@@ -168,9 +170,9 @@ API contract: [llms.txt](https://soulintime.com/llms.txt) and [openapi.yaml](htt
 
 ## Status
 
-Two sealed examples now exist. Bitcoin whitepaper abstract: moment-ao91b5a0@975352 (non-house); Door: 965906 (permanent test object). Questions: https://github.com/SoulinTime/soulintime-client/issues. Monthly is the primary offer; Starter remains available at https://soulintime.com/pricing. HQ posts: [posts.md](posts.md). non-house firsts: 1. Last verified: 2026-11-12.
+Two sealed examples now exist. Bitcoin whitepaper abstract: moment-ao91b5a0@975352 (public example); Door: 965906 (permanent test object). Questions: https://github.com/SoulinTime/soulintime-client/issues. Monthly is the primary offer; Starter remains available at https://soulintime.com/pricing. HQ posts: [posts.md](posts.md). Last verified: 2026-11-15.
 
-Permanent test object: Door at 965906. Non-house sealed example: moment-ao91b5a0@975352. Public firsts that are not house examples: 1.
+Permanent test object: Door at 965906. Public sealed example: moment-ao91b5a0@975352. Check it in 60 seconds: https://soulintime.com/check
 
 ## License
 

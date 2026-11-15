@@ -1,0 +1,11 @@
+EXAMPLE ONLY. A made-up model answer, shown as an AI team might keep it.
+
+Model: example-model-v2   Prompt ID: eval-0142   Settings: temperature 0
+
+Prompt: Summarise the refund policy in one sentence.
+
+Answer: Customers can return unused items within 30 days for a full refund,
+and opened items within 14 days for store credit.
+
+Evaluator note: answer matches policy text v5. Published in the weekly eval
+report without edits.

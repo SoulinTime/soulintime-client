@@ -15,16 +15,16 @@ Do not retry already_stamped; read the slug.
 MCP Registry: https://registry.modelcontextprotocol.io/v0.1/servers/io.github.MorrisMoe%2Fsoulintime/versions/latest
 Last updated: 2026-11-12
 
-Permanent test object: Door at block 965906. Last verified: 2026-11-12.
+Permanent test object: Door at block 965906. Last verified: 2026-11-15.
 
-### Second reference: non-house Bitcoin whitepaper abstract
+### Second reference: public example, Bitcoin whitepaper abstract
 
 moment-ao91b5a0@975352
 SHA-256: d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa
 Check: https://soulintime.com/verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa
 Receipt: https://soulintime.com/moment/moment-ao91b5a0
 proofFile: https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1
-Last verified: 2026-11-12. non-house firsts: 1.
+Last verified: 2026-11-15. People can check it in the browser in 60 seconds: https://soulintime.com/check
 
 ## Pricing and private book status
 
@@ -46,6 +46,6 @@ How agents find us: the official MCP Registry (io.github.MorrisMoe/soulintime), 
 
 ## Who this is for
 
-Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Non-house firsts: 1. Last verified (both sealed examples): 2026-11-12.
+Individuals & disputes; Lawyers & small firms; AI teams & agents. See https://soulintime.com/who and https://soulintime.com/benefits.json. Last verified (both sealed examples): 2026-11-15.
 
 Proofs use OpenTimestamps: https://opentimestamps.org/
