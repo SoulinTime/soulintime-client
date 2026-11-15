@@ -14,7 +14,7 @@ Three short, made-up texts that show what people date with SoulInTime: a contrac
 
 1. Open https://soulintime.com/try and pick the file. Your browser makes its fingerprint (SHA-256); the file never leaves your device.
 2. Keep the file and the proof file (`.ots`) together.
-3. Send the receipt link to anyone. They check it for free, with no account, at https://soulintime.com/verify or with any OpenTimestamps client.
+3. Send the receipt link to anyone. They check it for free, with no account, on the receipt page itself or with any OpenTimestamps client. To see a check first, open https://soulintime.com/check.
 
 What a confirmed receipt shows, exactly: these exact bytes existed by this Bitcoin block. It does not show who wrote the text, that it is true, or any legal conclusion. Change one character and it no longer matches.
 
