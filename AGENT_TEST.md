@@ -20,6 +20,16 @@ curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61
 Expect: `"status":"confirmed"`, `"blockHeight":975352`, `"slug":"moment-ao91b5a0"`, and a `proofFile`.
 .ots: https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1
 
+## 3. Mutation (expect refusal)
+
+Change one byte of the abstract or hash and verify returns HTTP 404 `{"error":"not_found"}`: not confirmed, do not cite.
+
+```sh
+curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"
+```
+
+Returns (HTTP 404): `{"error":"not_found","hash":"d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"}` — no `status`, no `blockHeight`, no `proofFile`, so the rule below refuses. (Last hex digit of the whitepaper hash changed from `a` to `b`.)
+
 ## Notes
 
 verify is the primary call and the only one needed to cite; first_at is secondary (earliest height only) and not required.
@@ -36,3 +46,5 @@ Cite slug@height only if status is confirmed AND proofFile downloads; otherwise 
 
 Pass = both cite (`a-hash-is-a-door-that-2026-019bd305@965906`, `moment-ao91b5a0@975352`), and any pending or unknown hash is refused.
 The claim is only: these exact bytes existed by this Bitcoin block. The .ots verifies without this site.
+
+Wiring this into an agent framework (OpenAI Agents SDK, LangChain, Pydantic AI) as a pre-cite hook: [FRAMEWORK_NOTE.md](FRAMEWORK_NOTE.md).

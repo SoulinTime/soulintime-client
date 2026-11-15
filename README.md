@@ -6,6 +6,8 @@ curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fc
 
 Expected: `"status":"confirmed","blockHeight":965906`
 
+Change one byte of the abstract or hash and verify returns HTTP 404 `{"error":"not_found"}`: not confirmed, do not cite.
+
 Agents: Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists. Two-curl agent test: [AGENT_TEST.md](AGENT_TEST.md). verify is the primary call and the only one needed to cite; first_at is secondary (earliest height only) and not required. Rate limit: 120 verify requests per IP per 60 s (best effort). On 429, respect Retry-After or X-RateLimit-Reset; do not tight-loop. A 429 body is `{"error":"rate_limited"}`, never a confirmed result. The verify response shape is stable: status, blockHeight, slug and proofFile keep their names and meaning. Offline: download the .ots (proofFile), then run `ots verify -f <original file> <slug>.ots` (OpenTimestamps client; needs your own Bitcoin node, or compare the merkle root from `ots info` with any block explorer).
 
 **People: check a real receipt in 60 seconds, in your browser, no account: https://soulintime.com/check**
