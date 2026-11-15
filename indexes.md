@@ -16,6 +16,7 @@ curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fc
 | awesome-remote-mcp-servers | https://github.com/punkpeye/awesome-remote-mcp-servers/pull/4785 | Submitted; pull request open, CI labels endpoint-ok and has-connector, no review yet | 2026-11-15 |
 | MCP.Directory | https://mcp.directory/submit | Not listed yet. The public form (no account) reports "This repository has already been submitted. We'll review it soon!" — in their review queue | 2026-11-15 |
 | awesome-mcp-servers | https://github.com/punkpeye/awesome-mcp-servers | Not submitted. Its CI requires a Glama server page (glama.ai/mcp/servers/SoulinTime/soulintime-client), which does not exist yet | 2026-11-15 |
+| PulseMCP | https://www.pulsemcp.com/servers?q=soulintime | Not listed (search 0). Candidate for next week's one new index; it states it ingests the official MCP Registry | 2026-11-15 |
 | Smithery | https://smithery.ai | Not listed. Publishing needs a Smithery account | 2026-11-15 |
 
 Agent test: [AGENT_TEST.md](AGENT_TEST.md). People: https://soulintime.com/check
