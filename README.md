@@ -1,5 +1,11 @@
 # Test without creating
 
+```sh
+curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
+```
+
+Agents: Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists. Two-curl agent test: [AGENT_TEST.md](AGENT_TEST.md).
+
 **People: check a real receipt in 60 seconds, in your browser, no account: https://soulintime.com/check**
 
 Two sealed examples now exist. **Public example: Bitcoin whitepaper abstract** (a text SoulInTime did not write), [`moment-ao91b5a0@975352`](https://soulintime.com/moment/moment-ao91b5a0). SHA-256 `d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa`. [Download .ots](https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1). Last verified: 2026-11-15.
@@ -12,7 +18,7 @@ Live receipt: [https://soulintime.com/moment/a-hash-is-a-door-that-2026-019bd305
 
 Latest sealed example: Bitcoin whitepaper abstract, moment-ao91b5a0 at block 975352 (public example). Door: block 965906 (permanent test object).
 
-Citation rule: cite `slug@height` only when status is `confirmed` and `proofFile` exists; otherwise refuse.
+Citation rule: Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists.
 
 Check it on the web: [https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f](https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f)
 
@@ -71,7 +77,7 @@ Proofs use OpenTimestamps: https://opentimestamps.org/
 - [Your account after payment](https://soulintime.com/account) (Sign in with Google)
 - [For agents](https://soulintime.com/for-agents) · [For firms](https://soulintime.com/for-firms)
 - Listed on: the [official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.MorrisMoe%2Fsoulintime/versions/latest) (`io.github.MorrisMoe/soulintime`), [mcpservers.org](https://mcpservers.org/servers/soulintime/soulintime-client) and [Glama](https://glama.ai/mcp/connectors/io.github.MorrisMoe/soulintime).
-- How agents find us: MCP Registry, mcpservers.org, Glama, and [llms.txt](https://soulintime.com/llms.txt).
+- How agents find us: MCP Registry, mcpservers.org, Glama, and [llms.txt](https://soulintime.com/llms.txt). Index list with status: [indexes.md](indexes.md).
 
 - [Homepage: whitepaper first, permanent Door beneath](https://soulintime.com/)
 - [Developers and Pricing](https://soulintime.com/developers) · [Pricing](https://soulintime.com/pricing)

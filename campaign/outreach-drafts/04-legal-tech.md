@@ -2,7 +2,7 @@
 
 - Audience: Legal-tech person
 - Recipient: Role placeholder: legal-tech practitioner
-- Word count (sendable body): 30
+- Word count (sendable body): 26
 - Status: draft only. Do not email, post, or submit this note.
 - Note: This draft does not claim legal admissibility or that the abstract is true. It only points at a checkable receipt.
 
@@ -12,9 +12,7 @@
 
 Hello,
 
-A receipt for the Bitcoin whitepaper abstract is here:
-https://soulintime.com/moment/moment-ao91b5a0
+Check a real receipt (the Bitcoin whitepaper abstract) in 60 seconds, in your browser, no account:
+https://soulintime.com/check
 
-Check it yourself: sha256 of the abstract text = d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa, proof verifies at block 975352 without our server.
-
-https://soulintime.com/pricing
+These exact bytes existed by this Bitcoin block.

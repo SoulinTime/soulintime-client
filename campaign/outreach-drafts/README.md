@@ -5,7 +5,7 @@ Prepared 11 Nov 2026 for SoulInTime brief v29, items 15, 16, and 82.
 Status: drafts only. Nothing in this folder has been emailed, posted, or submitted.
 Do not send until /who is live, the Stripe webhook is active, and Morris approves a send.
 
-Each sendable body is under 80 words and holds only the whitepaper moment link, the check-yourself line, and the pricing link, plus a greeting.
+Each sendable body is under 80 words and holds only https://soulintime.com/check (or, for the MCP maintainer, the read-only whitepaper curl) and the line "These exact bytes existed by this Bitcoin block.", plus a greeting. Updated 15 Nov 2026 (v45).
 
 This public copy uses role labels only. It does not name individual recipients.
 
