@@ -1,4 +1,4 @@
-# Agent test
+# Agent test — two curls, no key: these bytes, this block, check yourself
 
 Two read-only curls. No API key, no account. Neither creates anything.
 
@@ -8,7 +8,7 @@ Two read-only curls. No API key, no account. Neither creates anything.
 curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
 ```
 
-Expect: `"status":"confirmed"`, `"blockHeight":965906`, `"slug":"a-hash-is-a-door-that-2026-019bd305"`, and a `proofFile`.
+Expected: `"status":"confirmed","blockHeight":965906` — plus `"slug":"a-hash-is-a-door-that-2026-019bd305"` and a `proofFile`.
 .ots: https://soulintime.com/functions/v1Proof?id=a-hash-is-a-door-that-2026-019bd305&ots=1
 
 ## 2. Bitcoin whitepaper abstract
@@ -19,6 +19,16 @@ curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61
 
 Expect: `"status":"confirmed"`, `"blockHeight":975352`, `"slug":"moment-ao91b5a0"`, and a `proofFile`.
 .ots: https://soulintime.com/functions/v1Proof?id=moment-ao91b5a0&ots=1
+
+## Notes
+
+verify is the primary call and the only one needed to cite; first_at is secondary (earliest height only) and not required.
+
+Rate limit: 120 verify requests per IP per 60 s (best effort). On 429, respect Retry-After or X-RateLimit-Reset; do not tight-loop. A 429 body is `{"error":"rate_limited"}`, never a confirmed result.
+
+The verify response shape is stable: status, blockHeight, slug and proofFile keep their names and meaning.
+
+Offline: download the .ots (proofFile), then run `ots verify -f <original file> <slug>.ots` (OpenTimestamps client; needs your own Bitcoin node, or compare the merkle root from `ots info` with any block explorer).
 
 ## Rule
 
