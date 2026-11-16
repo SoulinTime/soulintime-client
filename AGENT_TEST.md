@@ -2,6 +2,24 @@
 
 Two read-only curls. No API key, no account. Neither creates anything.
 
+## Two-curl contract
+
+```sh
+curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
+```
+
+Expected (HTTP 200): `"status":"confirmed","blockHeight":965906` (and a proofFile)
+
+```sh
+curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"
+```
+
+Expected (HTTP 404): `{"error":"not_found","hash":"d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"}`
+
+Change one byte. If you do not get not_found, do not trust us.
+
+Drop-in snippets for OpenAI Agents SDK, LangChain and Pydantic AI: [FRAMEWORK_SNIPPET.md](FRAMEWORK_SNIPPET.md). Works with any HTTP or MCP agent.
+
 ## 1. Door (permanent test object)
 
 ```sh

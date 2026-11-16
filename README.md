@@ -8,7 +8,17 @@ Expected: `"status":"confirmed","blockHeight":965906`
 
 Change one byte of the abstract or hash and verify returns HTTP 404 `{"error":"not_found"}`: not confirmed, do not cite.
 
-Agents: Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists. Two-curl agent test: [AGENT_TEST.md](AGENT_TEST.md). Pre-cite hook for OpenAI Agents SDK, LangChain and Pydantic AI (each tested against the hosted MCP): [FRAMEWORK_NOTE.md](FRAMEWORK_NOTE.md). verify is the primary call and the only one needed to cite; first_at is secondary (earliest height only) and not required. Rate limit: 120 verify requests per IP per 60 s (best effort). On 429, respect Retry-After or X-RateLimit-Reset; do not tight-loop. A 429 body is `{"error":"rate_limited"}`, never a confirmed result. The verify response shape is stable: status, blockHeight, slug and proofFile keep their names and meaning. Offline: download the .ots (proofFile), then run `ots verify -f <original file> <slug>.ots` (OpenTimestamps client; needs your own Bitcoin node, or compare the merkle root from `ots info` with any block explorer).
+Mutated-hash curl (the whitepaper abstract hash with its last character changed from a to b):
+
+```sh
+curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"
+```
+
+Expected (HTTP 404): `{"error":"not_found","hash":"d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"}`
+
+Change one byte. If you do not get not_found, do not trust us.
+
+Agents: Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists. Two-curl agent test: [AGENT_TEST.md](AGENT_TEST.md). Pre-cite hook for OpenAI Agents SDK, LangChain and Pydantic AI (each tested against the hosted MCP): [FRAMEWORK_NOTE.md](FRAMEWORK_NOTE.md). Five-line drop-in snippets: [FRAMEWORK_SNIPPET.md](FRAMEWORK_SNIPPET.md). verify is the primary call and the only one needed to cite; first_at is secondary (earliest height only) and not required. Rate limit: 120 verify requests per IP per 60 s (best effort). On 429, respect Retry-After or X-RateLimit-Reset; do not tight-loop. A 429 body is `{"error":"rate_limited"}`, never a confirmed result. The verify response shape is stable: status, blockHeight, slug and proofFile keep their names and meaning. Offline: download the .ots (proofFile), then run `ots verify -f <original file> <slug>.ots` (OpenTimestamps client; needs your own Bitcoin node, or compare the merkle root from `ots info` with any block explorer).
 
 **People: check a real receipt in 60 seconds, in your browser, no account: https://soulintime.com/check**
 
