@@ -17,6 +17,7 @@ curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fc
 | MCP.Directory | https://mcp.directory/submit | Not listed yet. The public form (no account) reports "This repository has already been submitted. We'll review it soon!" — in their review queue; no public listing page yet | 2026-11-16 |
 | awesome-mcp-servers | https://github.com/punkpeye/awesome-mcp-servers | Not submitted. Its CI requires a Glama server page (glama.ai/mcp/servers/SoulinTime/soulintime-client), which does not exist yet (404) | 2026-11-16 |
 | PulseMCP | https://www.pulsemcp.com/servers?q=soulintime | Not listed (search 0). Submissions are paused (their /submit page, last updated 2026-09-03); they say they ingest the Official MCP Registry, where SoulInTime is listed. Still paused on 2026-11-16. Nothing to submit | 2026-11-16 |
+| mcp.so | https://mcp.so/servers/soulintime-client | Listed (picked up from GitHub on its own; nothing submitted). Shows the older repo description and "No standard config provided"; README now carries a standard `mcpServers` URL block. Its submit form offers a $39 paid listing and a Sign In; not used | 2026-11-16 |
 | Smithery | https://smithery.ai | Not listed. Publishing needs a Smithery account | 2026-11-15 |
 
 Agent test: [AGENT_TEST.md](AGENT_TEST.md). Framework hook: [FRAMEWORK_NOTE.md](FRAMEWORK_NOTE.md). People: https://soulintime.com/check

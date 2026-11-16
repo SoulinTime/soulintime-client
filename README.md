@@ -160,6 +160,12 @@ Hosted (`/functions/mcp`):
 - Tools `verify(hash)` and `first_at(hash, height?)` are read-only.
 - `stamp(hash)` creates a receipt and is never an evaluation call.
 
+Client config (Claude, Cursor, VS Code and other MCP clients that take a remote URL; no key):
+
+```json
+{"mcpServers": {"soulintime": {"url": "https://soulintime.com/functions/mcp"}}}
+```
+
 Local (`mcp-local/`):
 - This is the source of the same 0.1.0 package served by the download link. It speaks stdio.
 - See `mcp-local/README.md` for setup. That README predates the hosted endpoint.
