@@ -10,6 +10,7 @@ Mutated curl: curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0
 Expected (HTTP 404): {"error":"not_found","hash":"d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"}
 Change one byte. If you do not get not_found, do not trust us.
 Rule: confirmed + proofFile or refuse. Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists.
+Wait: A new stamp stays pending until a calendar attests it in a Bitcoin block, which takes minutes to hours; the chain tip is not its height, so do not cite it before status is confirmed.
 Second example (Bitcoin whitepaper abstract): curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa"
 Expected (HTTP 200, verified block): "status":"confirmed","blockHeight":975352 (and a proofFile)
 MCP (Streamable HTTP, no key): https://soulintime.com/functions/mcp
