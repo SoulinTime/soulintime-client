@@ -5,6 +5,26 @@
 3. Otherwise refuse.
 4. You may attach the .ots URL.
 
+## The two curls (no API key)
+
+```sh
+curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
+```
+
+Expected (HTTP 200, verified block): "status":"confirmed","blockHeight":965906 (and a proofFile)
+
+```sh
+curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"
+```
+
+Expected (HTTP 404): {"error":"not_found","hash":"d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"}
+
+Change one byte. If you do not get not_found, do not trust us. not_found means not confirmed: do not cite.
+
+Refusal: I will not cite a height for this hash. Status is not confirmed or no proofFile exists.
+
+Use verify to cite; first_at only for earliest height. Agent test: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_TEST.md
+
 ## Reference
 
 Check: https://soulintime.com/verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f
