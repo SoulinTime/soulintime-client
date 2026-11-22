@@ -19,3 +19,23 @@ Three short, made-up texts that show what people date with SoulInTime: a contrac
 What a confirmed receipt shows, exactly: these exact bytes existed by this Bitcoin block. It does not show who wrote the text, that it is true, or any legal conclusion. Change one character and it no longer matches.
 
 These example files have **not** been dated by us, so there is no receipt for them. Edit one, then date your own copy.
+
+## Code examples (statements)
+
+Every example makes the same request as the canonical signed-out curl and comments point back to it:
+
+```sh
+curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: application/json" -d "{\"sha256Hash\":\"$(sha256sum yourfile | cut -c1-64)\"}"
+```
+
+| Example | Required input | Status | Produces an external statement? |
+|---|---|---|---|
+| [create_statement.py](create_statement.py) | a file path | runnable (Python 3, stdlib) | yes, when you run it |
+| [create_statement.mjs](create_statement.mjs) | a file path | runnable (Node 18+) | yes, when you run it |
+| [git-hook-post-commit.sh](git-hook-post-commit.sh) | a git repo with a commit | runnable if you install it | yes, one per commit (free: one per network per hour) |
+| [github-action/release-statement.yml](github-action/release-statement.yml) | a published release with assets | valid YAML, **not enabled**, not published as an Action | yes, one per asset |
+| [email-inbound.md](email-inbound.md) | one SHA-256 per message | sketch, not built | would, per sender |
+| [share-target.md](share-target.md) | selected text or a shared file | sketch (bookmarklet runnable) | yes, when you run it |
+
+A statement exists only after Bitcoin confirms (usually 1 to 6 hours). Pending is not a statement; a 429 is not a statement.
+Check any statement offline with [../verifier](../verifier). Spec: [../SPEC-statement-v0.1.md](../SPEC-statement-v0.1.md).

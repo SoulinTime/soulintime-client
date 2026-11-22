@@ -1,0 +1,29 @@
+# Example only. Not published as an Action and not enabled in this repository (it lives under examples/, not .github/workflows/).
+# Copy into your own repo's .github/workflows/ to request a signed statement for each release asset.
+# Same request as the canonical signed-out curl in the README. Each run from GitHub's network shares that network's
+# free hourly allowance; a 429 (rate_limited or already_stamped) is not a statement and the step does not fail on it.
+name: release-statement
+on:
+  release:
+    types: [published]
+permissions:
+  contents: read
+jobs:
+  statement:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "${{ github.event.release.tag_name }}" --repo "${{ github.repository }}" --dir assets
+      - name: Request a statement per asset
+        run: |
+          for f in assets/*; do
+            h=$(sha256sum "$f" | cut -c1-64)
+            echo "$f $h"
+            curl -s -X POST https://soulintime.com/functions/createMoment \
+              -H "Content-Type: application/json" -H "X-SoulInTime-Client: github-action-example" \
+              -d "{\"sha256Hash\":\"$h\"}" || true
+            echo
+            echo "statement (after Bitcoin confirms): https://soulintime.com/statement?hash=$h"
+          done

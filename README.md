@@ -1,8 +1,16 @@
-# These exact bytes existed by Bitcoin block 965906. Check it yourself.
+# Request a signed statement with one curl: these exact bytes existed by a Bitcoin block.
 
 <!-- CARD:BEGIN v1 -->
 ```text
 SoulInTime agent card. Single source: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_CARD.md
+Request a signed statement (signed out, no account, first one free): curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: application/json" -d "{\"sha256Hash\":\"$(sha256sum yourfile | cut -c1-64)\"}"
+Expected (HTTP 200; a receipt, not yet a statement): {"slug":"moment-…","proofFile":"https://soulintime.com/functions/v1Proof?id=moment-…&ots=1","status":"in_calendar"}
+Rate limited (HTTP 429, never a statement): {"error":"Already stamped or rate limited. Check the existing receipt.","reason":"rate_limited","note":"One fresh hash per network per hour.",…} plus Retry-After. Already stamped (HTTP 429): the same error with "reason":"already_stamped" and the existing "slug". Do not retry.
+Wait: A new receipt stays pending until a calendar attests it in a Bitcoin block, usually 1 to 6 hours; the chain tip is not its height, so do not cite it before status is confirmed.
+Get the statement: curl -s "https://soulintime.com/functions/v1Statement?hash=<same sha256>" Expected once confirmed (HTTP 200): {"v":"sit-statement/0.1","sha256":"…","status":"confirmed","block_height":N,"block_hash":"…","ots_sha256":"…","issued_at":"…","issuer":"soulintime.com","kid":"0a64aa45b8ce17a7","sig":"…"}
+Verify an existing statement: curl -s "https://soulintime.com/functions/v1Statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f" | curl -s -X POST https://soulintime.com/functions/v1Statement -H "Content-Type: application/json" -d @-
+Expected: {"shape_ok":true,"signature_valid":true,"kid_known":true,"status":"confirmed","match":true,"receipt":{"status":"confirmed","blockHeight":965906,"slug":"a-hash-is-a-door-that-2026-019bd305"}}
+Paste this statement: the statement JSON is the thing to cite. Anyone can check it offline with the public key and the .ots: https://github.com/SoulinTime/soulintime-client/tree/main/verifier
 One curl, no key. Check these bytes against Bitcoin yourself.
 Door curl: curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
 Expected (HTTP 200, verified block): "status":"confirmed","blockHeight":965906 (and a proofFile)
@@ -17,7 +25,6 @@ not_found means not confirmed: do not cite.
 Rule: confirmed + proofFile or refuse. Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists.
 Use verify to cite; first_at only for earliest height.
 Signed statement (cite only a confirmed one; pending is not a statement): curl -s "https://soulintime.com/functions/v1Statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f" Expected (HTTP 200): "v":"sit-statement/0.1","status":"confirmed","block_height":965906,"kid":"0a64aa45b8ce17a7". Spec and offline verifier: https://github.com/SoulinTime/soulintime-client/blob/main/SPEC-statement-v0.1.md
-Wait: A new stamp stays pending until a calendar attests it in a Bitcoin block, which takes minutes to hours; the chain tip is not its height, so do not cite it before status is confirmed.
 Second example (Bitcoin whitepaper abstract): curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa"
 Expected (HTTP 200, verified block): "status":"confirmed","blockHeight":975352 (and a proofFile)
 These exact bytes existed by this block. Check it yourself.
@@ -50,6 +57,21 @@ Expected (HTTP 200):
 Unknown or not confirmed: HTTP 404 and a signed refusal (`"status":"refused"`, `"reason":"not_found"` or `"not_confirmed"`, `"ots_sha256":null`).
 Verify it offline: [`verifier/`](verifier/) (one file, Python or JS). Format: [SPEC-statement-v0.1.md](SPEC-statement-v0.1.md). Key: [`keys/`](keys/) (kid `0a64aa45b8ce17a7`).
 Public firsts as one file: [JSON](https://soulintime.com/functions/v1FirstAt?list=1&format=json) · [CSV](https://soulintime.com/functions/v1FirstAt?list=1&format=csv).
+Confirmed statements as one file: [firsts.json](https://soulintime.com/firsts.json) (newest block first; live: `https://soulintime.com/functions/v1Statement?firsts=1&since=<height>`). Status: https://soulintime.com/status.
+
+## Verify a statement yourself (offline)
+
+```sh
+curl -s "https://soulintime.com/functions/v1Statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f" > door.statement.json
+python3 verifier/verify_statement.py door.statement.json --hash 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f
+node verifier/verify_statement.mjs door.statement.json --hash 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f
+```
+
+Last line `RESULT: all checks passed`, exit 0; any changed byte, height or signature prints `RESULT: FAILED`, exit 1. Add `--file yourfile` and `--ots proof.ots` for the full check, then `ots verify -d <sha256> proof.ots` for the block. Test vectors: [verifier/vectors](verifier/vectors/). The verifier makes no network call. How to check the signing key itself: [keys/fingerprint-stamp.md](keys/fingerprint-stamp.md) (dated at block 977076).
+
+## Code and examples
+
+createStatement in [Python](examples/create_statement.py) and [JS](examples/create_statement.mjs), a [git hook](examples/git-hook-post-commit.sh), a [GitHub Action example](examples/github-action/release-statement.yml) (not enabled, not published as an Action) and two sketches: [examples/README.md](examples/README.md). Changes: [CHANGELOG.md](CHANGELOG.md). Problems with a statement: [open an issue](https://github.com/SoulinTime/soulintime-client/issues/new?template=statement-problem.md) (support is issues-only).
 
 
 Bitcoin is the clock. We date bytes to it. AI can change the file. It cannot change the block.
@@ -134,10 +156,10 @@ Outside Matches this week: 0. Completed payments: 0. (22 Nov 2026; the Match cou
 
 Free check stays free forever, subject to existing read limits. No account required to check. Account required to see what you paid for.
 
-Paid stamp balances: Monthly — 100 stamps / 30 days, $49 USD, one-time; Yearly — 1500 stamps / 365 days, $399 USD, best for teams and agents, one-time or auto-renew (cancel any time in the Stripe billing portal linked from https://soulintime.com/account); Starter pack — 10 stamps / 90 days, $20 USD, one-time. Card prices plus applicable tax. Lightning: coming soon. Prices and checkout: https://soulintime.com/pricing. Prices effective 12 Nov 2026. Next review: 1 Feb 2027. No account required to check. Account required to see what you paid for. Verified card payment attaches your stamps to the email used at Checkout; sign in with Google at https://soulintime.com/account to see stamps left, expiry, receipts and a download of all proofs. Credits apply only above the existing free per-network allowance; global limits stay unchanged. Payment never confirms, promotes or accelerates a receipt. Unused stamps expire at the end of the period. They do not roll over. Problem seeing your stamps? Open a GitHub issue: https://github.com/SoulinTime/soulintime-client/issues. Never publish private payment references or keys.
+Paid statement balances: Monthly — 100 statements / 30 days, $49 USD, one-time; Yearly — 1500 statements / 365 days, $399 USD, best for teams and agents, one-time or auto-renew (cancel any time in the Stripe billing portal linked from https://soulintime.com/account); Starter pack — 10 statements / 90 days, $20 USD, one-time. Card prices plus applicable tax. Prices and checkout: https://soulintime.com/pricing. Prices effective 12 Nov 2026. Next review: 1 Feb 2027. No account required to check. Account required to see what you paid for. Verified card payment attaches your statements to the email used at Checkout; sign in with Google at https://soulintime.com/account to see statements left, expiry, receipts and a download of all proofs. Credits apply only above the existing free per-network allowance; global limits stay unchanged. Payment never confirms, promotes or accelerates a receipt. Unused statements expire at the end of the period. They do not roll over. Problem seeing your statements? Open a GitHub issue: https://github.com/SoulinTime/soulintime-client/issues. Never publish private payment references or keys.
 
 
-After payment, sign in with Google at https://soulintime.com/account to see stamps left, expiry, receipts and a download of all proofs. Signed-in browsers spend account stamps automatically. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <balance key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt.
+After payment, sign in with Google at https://soulintime.com/account to see statements left, expiry, receipts and a download of all proofs. Signed-in browsers spend account statements automatically. Browser submissions use the saved key; API callers send `X-SoulInTime-Book: <balance key>` when intentionally creating. The free path runs first. Only a `rate_limited` refusal can reserve a paid credit; duplicate, validation and proof/citation rules are unchanged. A known pre-write failure releases the reservation; an uncertain write stays reserved for reconciliation. Payment never confirms, promotes or accelerates a receipt.
 
 ## Who this is for
 
@@ -187,7 +209,7 @@ Further rules:
 - A caption or a date is not proof.
 - A height dates the bytes; it does not show that the contents are true.
 - `first_at` (v1FirstAt) returns the earliest confirmed **public** receipt for a hash at or before height N. It is not a global history, and unlisted and private receipts never appear in it.
-- No account or key is required to check. Paid stamps are optional and used only when intentionally creating above the free allowance (signed in at https://soulintime.com/account in a browser, or with a balance key over REST); original file bytes are not sent.
+- No account or key is required to check. Paid statements are optional and used only when intentionally creating above the free allowance (signed in at https://soulintime.com/account in a browser, or with a balance key over REST); original file bytes are not sent.
 
 The MCP tools (hosted and local) check this rule against server metadata only. They do not cryptographically verify the `.ots`; for that, use `ots verify`.
 
@@ -196,7 +218,7 @@ The MCP tools (hosted and local) check this rule against server metadata only. T
 Creating is limited; reads are not unlimited either.
 
 Creating a receipt (createMoment):
-- The free allowance is one fresh hash per network per hour. Optional paid stamps apply only above that allowance through REST; MCP tools are unchanged.
+- The free allowance is one fresh hash per network per hour. Optional paid statements apply only above that allowance through REST; MCP tools are unchanged.
 - A second create inside that hour, or a hash that already has a receipt, returns `429` with the existing slug when that receipt is not private.
 - `already_stamped` is permanent and does not clear when the hour resets. Read the existing receipt instead.
 
@@ -207,7 +229,7 @@ On 429:
 - For a true rate limit, wait until `X-RateLimit-Reset` and don't tight-loop. `already_stamped` instead means read the existing slug.
 - Hosted MCP calls share the backend's network egress, so they may share the upstream allowance. There is no per-user allowance.
 
-Checking stays free forever. See Monthly, Yearly and Starter pricing above. Verified card payment unlocks only the purchased stamp balance and never changes receipt status. Lightning: coming soon.
+Checking stays free forever. See Monthly, Yearly and Starter pricing above. Verified card payment unlocks only the purchased statement balance and never changes receipt status.
 
 Need more than the free rate? Monthly, Yearly or Starter at https://soulintime.com/pricing. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish a balance key or payment reference.
 
@@ -235,7 +257,7 @@ Local (`mcp-local/`):
 
 Tests:
 - `test_http.py` mocks all HTTP.
-- `test_protocol.py` mocks every stamp. Its last case is one live read-only `verify` GET of the sealed hash, which runs when you run the file. It never makes a live POST.
+- `test_protocol.py` mocks every statement. Its last case is one live read-only `verify` GET of the sealed hash, which runs when you run the file. It never makes a live POST.
 
 ---
 
@@ -246,7 +268,7 @@ Tests:
 `reference-client/soulintime_client.py` is the same code published in [llms.txt](https://soulintime.com/llms.txt), standard library only. Running it **creates a receipt**:
 - It POSTs the hash to createMoment.
 - It polls v1Verify and saves the `.ots`.
-- An accepted stamp is a new registry entry, unlisted by default.
+- An accepted statement is a new registry entry, unlisted by default.
 
 To test without side effects, use the curl at the top instead.
 

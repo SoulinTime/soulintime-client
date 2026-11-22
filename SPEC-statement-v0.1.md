@@ -1,6 +1,6 @@
 # SoulInTime statement format, v0.1 (`sit-statement/0.1`)
 
-Status: draft v0.1, live on soulintime.com since 22 Nov 2026. Anyone may issue statements in this format with their own key.
+Status: v0.1, **pinned** (dated 22 Nov 2026; live on soulintime.com since that day). Fields and rules in this file do not change; any change ships as a new version (`sit-statement/0.2`) next to this one. Anyone may issue statements in this format with their own key. Changes to the API around it: [CHANGELOG.md](CHANGELOG.md).
 
 A **statement** is a small signed JSON object: *these exact bytes were confirmed (or refused) at Bitcoin block N.*
 The time comes from Bitcoin through an OpenTimestamps `.ots` proof. The signature says who issued the statement.
@@ -56,12 +56,37 @@ Current key (see [`keys/`](keys/), also on https://soulintime.com/protocol#state
 
 Retired keys stay listed forever with the period they signed, so old statements keep verifying.
 
+## Size and field limits
+
+- A statement is a single JSON object under 1 KB (about 480 bytes in practice). `sha256`, `block_hash` and `ots_sha256` are exactly 64 lowercase hex characters; `sig` is 86 base64url characters; `kid` is 16 hex.
+- `block_height` is a positive integer below 2^53. `issued_at` has whole seconds and a `Z`.
+- `POST /functions/v1Statement` accepts a pasted statement of at most 4 KB. No other fields are allowed in v0.1.
+- The request takes only a SHA-256 (64 hex); a large file and a small file cost the same, because only the hash is sent.
+
+## Request one (signed out)
+
+```sh
+curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: application/json" -d "{\"sha256Hash\":\"$(sha256sum yourfile | cut -c1-64)\"}"
+```
+
+The answer is a receipt (`{"slug":"moment-…","proofFile":"…","status":"in_calendar"}`), not a statement. One fresh hash per network per hour is free and needs no account; a 429 (`reason` `rate_limited` or `already_stamped`) is never a statement. Once Bitcoin confirms (usually 1 to 6 hours), `GET /functions/v1Statement?hash=<sha256>` returns the statement. Responses carry `X-SoulInTime-Request-Id` and `X-Statement-Spec: sit-statement/0.1`. Code: [examples/](examples/README.md).
+
+## Export URL pattern
+
+- Human-readable: `https://soulintime.com/statement?hash=<sha256>` (the hand-off: Forward text, QR to `/check`, `.ots` and statement downloads, offline steps).
+- Plain text (terminals and agents): `https://soulintime.com/functions/v1Statement?hash=<sha256>&format=text`.
+- Machine-readable: `https://soulintime.com/functions/v1Statement?hash=<sha256>` (the statement JSON itself).
+- All confirmed public statements: `https://soulintime.com/firsts.json` (snapshot) and `https://soulintime.com/functions/v1Statement?firsts=1&since=<height>` (live).
+
 ## Endpoints (soulintime.com)
 
 - `GET https://soulintime.com/functions/v1Statement?hash=<sha256>`: 200 + statement, or 404 + signed refusal.
 - `POST https://soulintime.com/functions/v1Statement` with `{"statement":{...}}`: `signature_valid`, `match` against the receipt.
 - `GET https://soulintime.com/functions/v1Verify?hash=<sha256>`: a confirmed receipt also carries `statement` next to `proofFile`.
 - Human page: `https://soulintime.com/statement?hash=<sha256>` (export, QR, `.ots`, forward).
+- `GET https://soulintime.com/functions/v1Statement?firsts=1` (confirmed statements list), `?health=1` (status), `?key=1` (public key).
+
+Test vectors: [`verifier/vectors/`](verifier/vectors/) (valid, tampered, wrong key, refused).
 
 ## Examples
 
