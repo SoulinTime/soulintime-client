@@ -7,6 +7,7 @@ One curl, no key. Check these bytes against Bitcoin yourself.
 Door curl: curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
 Expected (HTTP 200, verified block): "status":"confirmed","blockHeight":965906 (and a proofFile)
 These exact bytes existed by Bitcoin block 965906. Same file. Same hash. Check it yourself.
+AI can change the file. It cannot change the block.
 Hash only: you hash on your side; only the SHA-256 is sent, never the file. Bitcoin is the clock: a confirmed receipt shows these exact bytes existed by that Bitcoin block.
 Mutated curl: curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"
 Expected (HTTP 404): {"error":"not_found","hash":"d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"}
