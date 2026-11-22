@@ -1,7 +1,5 @@
 # These exact bytes existed by Bitcoin block 965906. Check it yourself.
 
-Outside Matches this week: 0. Completed payments: 0. (22 Nov 2026; the Match counter started that day.)
-
 <!-- CARD:BEGIN v1 -->
 ```text
 SoulInTime agent card. Single source: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_CARD.md
@@ -106,6 +104,8 @@ curl -s 'https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61
 Expected: status confirmed, blockHeight 975352 and proofFile.
 
 /yours supports signed-out device receipts; account-owned receipts require sign-in.
+
+Outside Matches this week: 0. Completed payments: 0. (22 Nov 2026; the Match counter started that day.)
 
 ## Pricing and your account
 
