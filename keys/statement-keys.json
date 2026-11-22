@@ -1,0 +1,13 @@
+{
+ "keys": [
+  {
+   "kid": "0a64aa45b8ce17a7",
+   "alg": "Ed25519",
+   "public_key_b64u": "GrcQ1ZzlNQAtU8GyezaWCmyFjzjP2NEknvkAd5CQXxc",
+   "public_key_hex": "1ab710d59ce535002d53c1b27b36960a6c858f38cfd8d1249ef9007790905f17",
+   "fingerprint_sha256": "0a64aa45b8ce17a781b91c1196907961f8ec27479a34a8f39c557e2b0b2797ee",
+   "status": "current",
+   "since": "2026-11-22"
+  }
+ ]
+}

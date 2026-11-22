@@ -1,0 +1,4 @@
+SoulInTime statement signing key (sit-statement/0.1)
+kid 0a64aa45b8ce17a7
+Ed25519 public key (raw, base64url) GrcQ1ZzlNQAtU8GyezaWCmyFjzjP2NEknvkAd5CQXxc
+fingerprint sha256(raw public key) 0a64aa45b8ce17a781b91c1196907961f8ec27479a34a8f39c557e2b0b2797ee
