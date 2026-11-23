@@ -4,8 +4,10 @@
 ```text
 SoulInTime agent card. Single source: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_CARD.md
 Request a signed statement (signed out, no account, first one free): curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: application/json" -d "{\"sha256Hash\":\"$(sha256sum yourfile | cut -c1-64)\"}"
+Cite line (once confirmed; one line, paste it as-is, do not wrap): sha256 <hash> existed by Bitcoin block <N>. Statement: https://soulintime.com/statement?hash=<hash>  Get it: curl -s "https://soulintime.com/functions/v1Statement?hash=<hash>&format=cite"
+Cite example (Door): sha256 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f existed by Bitcoin block 965906. Statement: https://soulintime.com/statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f
 Expected (HTTP 200; a receipt, not yet a statement): {"slug":"moment-…","proofFile":"https://soulintime.com/functions/v1Proof?id=moment-…&ots=1","status":"in_calendar"}
-Rate limited (HTTP 429, never a statement): {"error":"Already stamped or rate limited. Check the existing receipt.","reason":"rate_limited","note":"One fresh hash per network per hour.",…} plus Retry-After. Already stamped (HTTP 429): the same error with "reason":"already_stamped" and the existing "slug". Do not retry.
+Refused (HTTP 429, never a statement): {"error":"Already stamped or rate limited. Check the existing receipt.","reason":"rate_limited","statement":null,"cite":null,"do_not_cite":"No statement exists for this request. Do not cite a block for this hash.",…} plus Retry-After. Already stamped (HTTP 429): "reason":"already_stamped" and the existing "slug"; only when that hash is already confirmed does it also carry its "statement" and "cite". Do not retry.
 Wait: A new receipt stays pending until a calendar attests it in a Bitcoin block, usually 1 to 6 hours; the chain tip is not its height, so do not cite it before status is confirmed.
 Get the statement: curl -s "https://soulintime.com/functions/v1Statement?hash=<same sha256>" Expected once confirmed (HTTP 200): {"v":"sit-statement/0.1","sha256":"…","status":"confirmed","block_height":N,"block_hash":"…","ots_sha256":"…","issued_at":"…","issuer":"soulintime.com","kid":"0a64aa45b8ce17a7","sig":"…"}
 Verify an existing statement: curl -s "https://soulintime.com/functions/v1Statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f" | curl -s -X POST https://soulintime.com/functions/v1Statement -H "Content-Type: application/json" -d @-
@@ -37,6 +39,7 @@ Agent test with expected outputs: https://github.com/SoulinTime/soulintime-clien
 Prove a file existed: https://soulintime.com/developers · For agents: https://soulintime.com/for-agents · For people, the 60-second demo: https://soulintime.com/check
 Create: Verify free forever. Create a statement when you need one. First one free, no account needed.
 Prices, for people: https://soulintime.com/pricing
+Card updated 2026-11-23 · Spec https://github.com/SoulinTime/soulintime-client/blob/main/SPEC-statement-v0.1.md · Verifier https://github.com/SoulinTime/soulintime-client/tree/main/verifier · Firsts https://soulintime.com/firsts.json · Status https://soulintime.com/status
 ```
 <!-- CARD:END -->
 
@@ -149,6 +152,30 @@ curl -s "https://soulintime.com/functions/v1Statement?hash=d3871457c0fd628a796f1
 ```
 
 Expected (HTTP 404): a signed refusal, `"status":"refused"`, `"reason":"not_found"`, `"ots_sha256":null`, `block_height` = the chain tip when asked, `"kid":"0a64aa45b8ce17a7"`. Refuse to cite. Pending is not a statement.
+
+## 5. Cite line (echo it untruncated)
+
+```sh
+curl -s "https://soulintime.com/functions/v1Statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f&format=cite"
+```
+
+Expected (HTTP 200, `text/plain`, one line of 218 ASCII characters, then a newline):
+
+```
+sha256 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f existed by Bitcoin block 965906. Statement: https://soulintime.com/statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f
+```
+
+Pass: your answer contains that exact line, unwrapped and unshortened. Paste the cite line exactly as returned, on one line, unchanged: `sha256 <hash> existed by Bitcoin block <N>. Statement: <url>`. It says only that these exact bytes existed by that block; it does not say who made them or that they are true. Cite only a confirmed statement: pending, rate-limited and refused answers carry `"cite":null` and must not be cited. Anyone can check the statement offline with the public key and the .ots, and it still verifies if we disappear.
+
+Refusal fixture (HTTP 429 from `createMoment`; `"cite":null`, never cite): [examples/fixtures/refusal-rate-limited.json](examples/fixtures/refusal-rate-limited.json). A 429 `already_stamped` for a confirmed hash instead carries that hash's existing `statement` and `cite`.
+
+## 6. Firsts since a block
+
+```sh
+curl -s "https://soulintime.com/functions/v1Statement?firsts=1&since=977000"
+```
+
+Expected: only confirmed statements with `block_height >= 977000` (today the signing-key fingerprint, block 977076), each row with its `cite`. Static file: `jq '.firsts|map(select(.block_height>=977000))' firsts.json`.
 
 ## Notes
 

@@ -1,0 +1,9 @@
+{
+ "error": "Already stamped or rate limited. Check the existing receipt.",
+ "reason": "rate_limited",
+ "statement": null,
+ "cite": null,
+ "do_not_cite": "No statement exists for this request. Do not cite a block for this hash.",
+ "note": "One fresh hash per network per hour.",
+ "more": "Need more than the free rate? See https://soulintime.com/pricing."
+}

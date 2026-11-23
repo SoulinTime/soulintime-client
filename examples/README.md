@@ -33,7 +33,7 @@ curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: 
 | [create_statement.py](create_statement.py) | a file path | runnable (Python 3, stdlib) | yes, when you run it |
 | [create_statement.mjs](create_statement.mjs) | a file path | runnable (Node 18+) | yes, when you run it |
 | [git-hook-post-commit.sh](git-hook-post-commit.sh) | a git repo with a commit | runnable if you install it | yes, one per commit (free: one per network per hour) |
-| [github-action/release-statement.yml](github-action/release-statement.yml) | a published release with assets | valid YAML, **not enabled**, not published as an Action | yes, one per asset |
+| [github-action/release-statement.yml](github-action/release-statement.yml) ([README](github-action/README.md): expected responses, PR/commit template) | a published release with assets | valid YAML (actionlint clean), **not enabled**, not published as an Action; prints the cite line per asset | yes, one per asset |
 | [email-inbound.md](email-inbound.md) | one SHA-256 per message | sketch, not built | would, per sender |
 | [share-target.md](share-target.md) | selected text or a shared file | sketch (bookmarklet runnable) | yes, when you run it |
 

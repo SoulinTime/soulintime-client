@@ -71,6 +71,36 @@ curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: 
 
 The answer is a receipt (`{"slug":"moment-…","proofFile":"…","status":"in_calendar"}`), not a statement. One fresh hash per network per hour is free and needs no account; a 429 (`reason` `rate_limited` or `already_stamped`) is never a statement. Once Bitcoin confirms (usually 1 to 6 hours), `GET /functions/v1Statement?hash=<sha256>` returns the statement. Responses carry `X-SoulInTime-Request-Id` and `X-Statement-Spec: sit-statement/0.1`. Code: [examples/](examples/README.md).
 
+## How to cite
+
+Paste the cite line exactly as returned, on one line, unchanged: `sha256 <hash> existed by Bitcoin block <N>. Statement: <url>`. It says only that these exact bytes existed by that block; it does not say who made them or that they are true. Cite only a confirmed statement: pending, rate-limited and refused answers carry `"cite":null` and must not be cited. Anyone can check the statement offline with the public key and the .ots, and it still verifies if we disappear.
+
+The cite line is not part of the signed statement (v0.1 allows no extra fields); it is derived from `sha256` and `block_height` and delivered beside it:
+
+- `GET /functions/v1Statement?hash=<sha256>&format=cite`: the line as `text/plain`, then a newline. Confirmed only; otherwise the signed refusal (HTTP 404).
+- Header `X-SoulInTime-Cite` on every confirmed `v1Statement?hash=` answer. The default JSON body is the statement, byte for byte.
+- `?with=cite`: `{"statement":{...},"cite":"...","statement_url":"...","card_url":"...","text_url":"...","offline_steps":[...],"still_verifies":"..."}`.
+- `createMoment` 429 `already_stamped` for a confirmed hash: the existing `statement` and its `cite`. Every other refusal: `"statement":null,"cite":null` and `do_not_cite` ([fixture](examples/fixtures/refusal-rate-limited.json)).
+- MCP `stamp`, the plain-text export and the Forward text carry the same line.
+
+Format: `sha256 ` + 64 lowercase hex + ` existed by Bitcoin block ` + decimal height + `. Statement: https://soulintime.com/statement?hash=` + the same hex. ASCII, one line, 218 characters. Example: [cite-door.txt](examples/fixtures/cite-door.txt).
+
+## Share message format
+
+Forward text: the cite line, then `These exact bytes existed by block <N>; it does not prove who made them or that they are true. Check it yourself, even offline: <statement url>`.
+
+- Card URL (unfurls with the hash and block): `https://soulintime.com/functions/statementCard?hash=<sha256>` (`og:title` `sha256 <12 hex>… existed by Bitcoin block <N>`; 404 if no confirmed statement).
+- Markdown: `[sha256 <12 hex>… existed by Bitcoin block <N>](https://soulintime.com/statement?hash=<sha256>)`
+- HTML: `<a href="https://soulintime.com/statement?hash=<sha256>">sha256 <12 hex>… existed by Bitcoin block <N></a>`
+
+The claim is always and only "existed by block N".
+
+Badge (concept only, not built): a shields-style badge `existed by | block <N>` linking to the statement URL, rendered only for a confirmed statement.
+
+## Firsts filter
+
+`GET /functions/v1Statement?firsts=1&since=<height>` (alias `min_block`) lists confirmed statements with `block_height >= height`, each row with its `cite`; for the static file: `jq '.firsts|map(select(.block_height>=<height>))' firsts.json`.
+
 ## Export URL pattern
 
 - Human-readable: `https://soulintime.com/statement?hash=<sha256>` (the hand-off: Forward text, QR to `/check`, `.ots` and statement downloads, offline steps).

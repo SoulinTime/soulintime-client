@@ -3,6 +3,11 @@
 Statement format and public API. Dates are UTC.
 
 ## 2026-11-23
+- Cite line: `sha256 <hash> existed by Bitcoin block <N>. Statement: <url>` via `v1Statement?hash=&format=cite`, header `X-SoulInTime-Cite`, `?with=cite`, MCP `stamp`, the plain-text export and the Forward text. The signed statement is unchanged.
+- Refusals from `createMoment` carry `"statement":null,"cite":null` and `do_not_cite`; `already_stamped` for a confirmed hash carries the existing statement and cite.
+- Statement card URL `functions/statementCard?hash=` (unfurls with hash and block); Markdown and HTML snippets.
+- Firsts rows carry `cite`; `min_block` alias for `since`.
+- GitHub Action example completed: hash each release asset, request signed out, print the cite line (example only).
 - Agent card now starts with the signed-out request curl and a curl that verifies an existing statement.
 - Responses carry `X-SoulInTime-Request-Id` and `X-Statement-Spec: sit-statement/0.1`; a failed calendar submit answers `"calendar_submit":"failed"`.
 - `firsts.json` (confirmed statements only) at https://soulintime.com/firsts.json; live list `v1Statement?firsts=1` (optional `since`).

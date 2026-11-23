@@ -1,29 +1,61 @@
 # Example only. Not published as an Action and not enabled in this repository (it lives under examples/, not .github/workflows/).
-# Copy into your own repo's .github/workflows/ to request a signed statement for each release asset.
-# Same request as the canonical signed-out curl in the README. Each run from GitHub's network shares that network's
-# free hourly allowance; a 429 (rate_limited or already_stamped) is not a statement and the step does not fail on it.
+# Copy into your own repo as .github/workflows/release-statement.yml. On each published release it:
+#   1. downloads the release assets and computes each sha256 (the file never leaves the runner; only the hash is sent),
+#   2. sends the free signed-out request (same as the README curl; no account, no key, first statement free),
+#   3. prints the one-line cite for every asset that already has a confirmed statement, and a pending line otherwise.
+# Bitcoin confirmation takes about 1 to 6 hours, so a fresh release prints "pending". Re-run it later with
+# "Run workflow" (workflow_dispatch, same tag): already-requested hashes are not re-created and confirmed ones print their cite.
+# A 429 (rate_limited) is a refusal, not a statement: it carries "cite": null and is never cited. The job does not fail on it.
 name: release-statement
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to (re)check
+        required: true
 permissions:
   contents: read
 jobs:
   statement:
     runs-on: ubuntu-latest
+    outputs:
+      cites: ${{ steps.cite.outputs.cites }}
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
     steps:
       - name: Download release assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release download "${{ github.event.release.tag_name }}" --repo "${{ github.repository }}" --dir assets
-      - name: Request a statement per asset
+        run: gh release download "$TAG" --repo "${{ github.repository }}" --dir assets
+      - name: Hash assets and request statements
         run: |
+          set -u
+          : > hashes.txt
           for f in assets/*; do
+            [ -f "$f" ] || continue
             h=$(sha256sum "$f" | cut -c1-64)
-            echo "$f $h"
-            curl -s -X POST https://soulintime.com/functions/createMoment \
+            echo "$h  $(basename "$f")" >> hashes.txt
+            code=$(curl -s -o "resp-$h.json" -w '%{http_code}' -X POST https://soulintime.com/functions/createMoment \
               -H "Content-Type: application/json" -H "X-SoulInTime-Client: github-action-example" \
-              -d "{\"sha256Hash\":\"$h\"}" || true
-            echo
-            echo "statement (after Bitcoin confirms): https://soulintime.com/statement?hash=$h"
+              -d "{\"sha256Hash\":\"$h\"}" || echo 000)
+            echo "$(basename "$f") $h -> HTTP $code $(jq -r '.reason // .status // .error // empty' "resp-$h.json" 2>/dev/null)"
           done
+      - name: Print cite lines
+        id: cite
+        run: |
+          set -u
+          : > cites.txt
+          while read -r h name; do
+            c=$(curl -s -w '\n%{http_code}' "https://soulintime.com/functions/v1Statement?hash=$h&format=cite" || printf '\n000')
+            code=$(printf '%s' "$c" | tail -n1); line=$(printf '%s' "$c" | head -n1)
+            if [ "$code" = 200 ] && [ -n "$line" ]; then
+              echo "$name: $line" | tee -a cites.txt
+            else
+              echo "$name: pending, no statement yet (do not cite). Re-run later or: curl -s \"https://soulintime.com/functions/v1Statement?hash=$h&format=cite\"" | tee -a cites.txt
+            fi
+          done < hashes.txt
+          { echo "cites<<SIT_EOF"; cat cites.txt; echo "SIT_EOF"; } >> "$GITHUB_OUTPUT"
+          { echo "### SoulInTime statements for $TAG"; echo; echo '```'; cat cites.txt; echo '```'; echo;
+            echo "Each line says only that these exact bytes existed by that Bitcoin block. Check offline: https://github.com/SoulinTime/soulintime-client/tree/main/verifier"; } >> "$GITHUB_STEP_SUMMARY"
