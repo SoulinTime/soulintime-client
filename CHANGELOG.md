@@ -3,6 +3,7 @@
 Statement format and public API. Dates are UTC.
 
 ## 2026-11-23
+- API v1 429 is link-free: a rate-limited create made no receipt, so the body is only `{error, note, reset_at, retry_after_seconds}` plus `Retry-After`, `X-RateLimit-Reset` and the request id. No `receipt_id`, `statement_url` or `cite`. MCP `stamp` no longer names a statement URL when the request was rate limited.
 - API v1 (JSON, CORS, no key): `POST /functions/apiV1Receipts`, `GET /functions/apiV1Verify?hash=`, `GET /functions/apiV1Receipts?id=`. Statuses `pending|in_calendar|anchored`; `height` only when anchored; `cite` only with a signed statement; `next_action` in every answer; 409 for an existing hash, 429 with `reset_at`. OpenAPI 3.1 at `/.well-known/openapi-v1.yaml`. At `/functions/` because Base44 has no custom `/api` routes. Older endpoints unchanged.
 - MCP `stamp` results carry `next_action` (`cite`, `verify_later`, `retry_after`).
 - Firsts `since` filter fixed: it now dedupes by earliest block before filtering (`since=977100` no longer returns the fingerprint at a later block).

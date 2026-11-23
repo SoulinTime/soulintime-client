@@ -123,7 +123,7 @@ Test vectors: [`verifier/vectors/`](verifier/vectors/) (valid, tampered, wrong k
 Added 23 Nov 2026. The statement format above is unchanged (still `sit-statement/0.1`); API v1 only wraps it in plain JSON.
 Base44, the host, serves functions only at `/functions/<name>`, so these are the stable URLs; there is no `/api/v1/` path.
 
-- `POST /apiV1Receipts` with `{"hash":"<sha256>","source":"<optional>"}`: 201 `{receipt_id, hash, status, height: null, statement_url, cite: null, proof_file, next_action}`; 409 if the hash already has a receipt; 429 `rate_limited` with `reset_at` and `Retry-After`.
+- `POST /apiV1Receipts` with `{"hash":"<sha256>","source":"<optional>"}`: 201 `{receipt_id, hash, status, height: null, statement_url, cite: null, proof_file, next_action}`; 409 if the hash already has a receipt (`receipt_id`; `cite` only once anchored, so a pending hash returns `receipt_id` and no cite); 429 `rate_limited` created nothing, so it carries no `receipt_id`, no `statement_url` and no `cite`: only the error, `reset_at`, `retry_after_seconds` and the `Retry-After` / `X-RateLimit-Reset` headers.
 - `GET /apiV1Verify?hash=<sha256>` (no key) and `GET /apiV1Receipts?id=<receipt_id>`: `{anchored, receipt_id, hash, height, timestamp, status, statement_url, cite, proof_file, next_action}`. `status` is `pending`, `in_calendar`, `anchored` (or `not_found`, HTTP 404).
 - `height` is set only when anchored (a real block height and an https `.ots`), never the chain tip. `cite` is set only when a signed statement exists. The create answer never waits for Bitcoin.
 - OpenAPI 3.1: https://soulintime.com/.well-known/openapi-v1.yaml · Docs: https://soulintime.com/api-v1.md

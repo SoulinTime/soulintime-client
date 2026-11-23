@@ -187,7 +187,7 @@ curl -s -X POST https://soulintime.com/functions/apiV1Receipts -H "Content-Type:
 ```
 
 Expected verify (HTTP 200): `"anchored":true`, `"height":965906`, `"status":"anchored"` and the cite line in `"cite"`. Change one character of the hash: HTTP 404, `"anchored":false`, `"status":"not_found"`, `"cite":null`.
-Expected create (HTTP 201): `"status":"in_calendar"` (or `"pending"`), `"height":null`, `"cite":null`, `next_action.do` = `verify_later`. Same hash again: HTTP 409 with the `receipt_id`. Over the free rate: HTTP 429 with `reset_at`. Never cite a 201, 409 without `cite`, or 429.
+Expected create (HTTP 201): `"status":"in_calendar"` (or `"pending"`), `"height":null`, `"cite":null`, `next_action.do` = `verify_later`. Same hash again: HTTP 409 with the `receipt_id`. Over the free rate: HTTP 429 with only the error and `reset_at` (no `receipt_id`, no `statement_url`, no `cite`: nothing was created). Never cite a 201, 409 without `cite`, or 429.
 
 ## Notes
 
