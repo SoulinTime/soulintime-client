@@ -167,7 +167,7 @@ Expected: status confirmed, blockHeight 975352 and proofFile.
 
 /yours supports signed-out device receipts; account-owned receipts require sign-in.
 
-Outside Matches this week: 0. Completed payments: 0. (22 Nov 2026; the Match counter started that day.)
+Outside Matches this week: 0. Completed payments: 0. (23 Nov 2026.)
 
 ## Pricing and your account
 
