@@ -177,6 +177,18 @@ curl -s "https://soulintime.com/functions/v1Statement?firsts=1&since=977000"
 
 Expected: only confirmed statements with `block_height >= 977000` (today the signing-key fingerprint, block 977076), each row with its `cite`. Static file: `jq '.firsts|map(select(.block_height>=977000))' firsts.json`.
 
+## 7. API v1 (JSON; same free rule)
+
+```sh
+# verify, read-only, no key (the Door)
+curl -s "https://soulintime.com/functions/apiV1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
+# create (signed out; only the hash leaves your machine; first one free, then one fresh hash per network per hour)
+curl -s -X POST https://soulintime.com/functions/apiV1Receipts -H "Content-Type: application/json" -d "{\"hash\":\"$(sha256sum yourfile | cut -c1-64)\",\"source\":\"yourapp\"}"
+```
+
+Expected verify (HTTP 200): `"anchored":true`, `"height":965906`, `"status":"anchored"` and the cite line in `"cite"`. Change one character of the hash: HTTP 404, `"anchored":false`, `"status":"not_found"`, `"cite":null`.
+Expected create (HTTP 201): `"status":"in_calendar"` (or `"pending"`), `"height":null`, `"cite":null`, `next_action.do` = `verify_later`. Same hash again: HTTP 409 with the `receipt_id`. Over the free rate: HTTP 429 with `reset_at`. Never cite a 201, 409 without `cite`, or 429.
+
 ## Notes
 
 verify is the primary call and the only one needed to cite; first_at is secondary (earliest height only) and not required.

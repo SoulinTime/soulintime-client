@@ -1,4 +1,5 @@
 # Example only. Not published as an Action and not enabled in this repository (it lives under examples/, not .github/workflows/).
+# WARNING: this creates a statement on your repo: every release asset's SHA-256 is sent to soulintime.com and a receipt is created for it.
 # Copy into your own repo as .github/workflows/release-statement.yml. On each published release it:
 #   1. downloads the release assets and computes each sha256 (the file never leaves the runner; only the hash is sent),
 #   2. sends the free signed-out request (same as the README curl; no account, no key, first statement free),

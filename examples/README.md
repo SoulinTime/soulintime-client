@@ -37,5 +37,23 @@ curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: 
 | [email-inbound.md](email-inbound.md) | one SHA-256 per message | sketch, not built | would, per sender |
 | [share-target.md](share-target.md) | selected text or a shared file | sketch (bookmarklet runnable) | yes, when you run it |
 
+`create_statement.py` and `.mjs` take `--wait` (create, then poll) or `--watch` (create nothing, only poll an existing receipt). Once confirmed they print the statement, the cite line and the statement URL.
+
+Pending-watch one-liner (prints the cite line once confirmed; set `H` to your SHA-256):
+
+```sh
+until curl -sf "https://soulintime.com/functions/v1Statement?hash=$H&format=cite"; do sleep 600; done
+```
+
+### API v1 (JSON)
+
+```sh
+curl -s -X POST https://soulintime.com/functions/apiV1Receipts -H "Content-Type: application/json" -d "{\"hash\":\"$(sha256sum yourfile | cut -c1-64)\",\"source\":\"yourapp\"}"
+curl -s "https://soulintime.com/functions/apiV1Verify?hash=$H"
+until curl -s "https://soulintime.com/functions/apiV1Verify?hash=$H" | grep -q '"anchored":true'; do sleep 600; done
+```
+
+Base44 serves functions only at `/functions/<name>`, so these are the stable API URLs. Docs: https://soulintime.com/api-v1.md
+
 A statement exists only after Bitcoin confirms (usually 1 to 6 hours). Pending is not a statement; a 429 is not a statement.
 Check any statement offline with [../verifier](../verifier). Spec: [../SPEC-statement-v0.1.md](../SPEC-statement-v0.1.md).
