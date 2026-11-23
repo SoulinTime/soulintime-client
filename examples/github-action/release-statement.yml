@@ -52,6 +52,8 @@ jobs:
             code=$(printf '%s' "$c" | tail -n1); line=$(printf '%s' "$c" | head -n1)
             if [ "$code" = 200 ] && [ -n "$line" ]; then
               echo "$name: $line" | tee -a cites.txt
+            elif [ "$(jq -r '.reason // empty' "resp-$h.json" 2>/dev/null)" = rate_limited ]; then
+              echo "$name: rate limited, not requested (one fresh hash per network per hour; do not cite). Re-run the workflow later." | tee -a cites.txt
             else
               echo "$name: pending, no statement yet (do not cite). Re-run later or: curl -s \"https://soulintime.com/functions/v1Statement?hash=$h&format=cite\"" | tee -a cites.txt
             fi

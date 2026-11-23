@@ -17,7 +17,7 @@ Bitcoin confirmation takes about 1 to 6 hours, so a fresh release prints `pendin
 Request (`createMoment`), fresh hash, HTTP 200: a receipt, not yet a statement:
 
 ```
-{"slug":"moment-…","proofFile":"https://soulintime.com/functions/v1Proof?id=moment-…&ots=1","status":"pending"}
+{"slug":"moment-…","proofFile":"https://soulintime.com/functions/v1Proof?id=moment-…&ots=1","status":"in_calendar"}
 ```
 
 Same hash again before confirmation, HTTP 429, a refusal (never cite it):
@@ -38,7 +38,7 @@ Cite (`v1Statement?hash=<hash>&format=cite`), confirmed, HTTP 200, one line of t
 sha256 <hash> existed by Bitcoin block <N>. Statement: https://soulintime.com/statement?hash=<hash>
 ```
 
-Not yet confirmed: not HTTP 200, no cite line. The workflow prints `pending, no statement yet (do not cite)`.
+Not yet confirmed: not HTTP 200, no cite line. The workflow prints `pending, no statement yet (do not cite)`, or `rate limited, not requested` for an asset refused with `rate_limited`.
 
 Job log, real shape (the Door, block 965906):
 
