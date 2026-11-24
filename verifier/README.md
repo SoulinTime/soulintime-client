@@ -14,7 +14,8 @@ It checks the statement shape, the file hash, the Ed25519 signature against the 
 and with `--ots` that the `.ots` bytes match `ots_sha256`. It then prints the `ots verify` command that checks the Bitcoin block.
 Python: pure-Python Ed25519 (RFC 8032) by default; uses PyNaCl or `cryptography` automatically when installed. JS: Node 18+ WebCrypto.
 Expected last line: `RESULT: all checks passed` (exit 0). A changed byte, height or signature prints `RESULT: FAILED` (exit 1).
-Spec: [../SPEC-statement-v0.1.md](../SPEC-statement-v0.1.md).
+Spec: [../SPEC-statement-v0.1.md](../SPEC-statement-v0.1.md) (hosted copy: https://soulintime.com/sit-statement-0.1.md). Both verifiers implement it with zero SoulInTime dependency: no network call, the key built in.
+In a browser: [survives/index.html](survives/index.html), one self-contained page that verifies a statement with soulintime.com blocked.
 
 ## Test vectors
 

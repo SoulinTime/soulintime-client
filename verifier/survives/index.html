@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The receipt survives us: verify a SoulInTime statement offline</title>
+<meta name="description" content="One self-contained page. It verifies a sit-statement/0.1 statement and its OpenTimestamps proof in your browser, from local files, with soulintime.com blocked.">
+<meta name="color-scheme" content="dark light">
+<style>
+:root{color-scheme:dark light}
+body{margin:0;background:#0A0A0A;color:#F4EDE4;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:46rem;margin:0 auto;padding:2rem 1.25rem}
+h1{font-size:1.6rem;line-height:1.2;margin:0 0 .5rem}h2{font-size:1.15rem;margin:1.75rem 0 .5rem}
+p,li{color:#C8C1B8}a{color:#F7931A}
+code,pre{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere;word-break:break-all;white-space:pre-wrap}
+pre{background:#151515;border-radius:.5rem;padding:.75rem;color:#C8C1B8}
+button,label.f{display:inline-block;margin:.25rem .5rem .25rem 0;border:1px solid #F7931A;color:#F7931A;background:none;border-radius:.75rem;padding:.5rem .9rem;font:600 14px system-ui;cursor:pointer}
+input[type=file]{display:none}
+.pass{color:#7FD18B}.fail{color:#FF7A6B}.big{font-size:1.3rem;font-weight:700}
+@media (prefers-color-scheme: light){body{background:#FAF7F2;color:#1A1714}p,li{color:#3A332C}pre{background:#EFE9E0;color:#2A2520}a,button,label.f{color:#B35F00;border-color:#B35F00}.pass{color:#1E7A30}.fail{color:#B3261E}}
+</style></head><body><main>
+<h1>The receipt survives us</h1>
+<p>This page verifies a SoulInTime statement with no SoulInTime server. Everything it needs is inside this file or in files you pick. It makes no request to soulintime.com. Save it (or open it from the <a href="https://github.com/SoulinTime/soulintime-client/tree/main/verifier/survives">repo</a>), block the domain, and run it.</p>
+<p>Spec: <a href="https://github.com/SoulinTime/soulintime-client/blob/main/SPEC-statement-v0.1.md">sit-statement/0.1</a> (also hosted at soulintime.com/sit-statement-0.1.md while we exist). Signing key 0a64aa45b8ce17a7, built in below.</p>
+<button id="run" type="button">Verify the built-in Door statement</button>
+<label class="f">Pick a statement JSON<input id="fst" type="file" accept=".json,application/json"></label>
+<label class="f">Pick its .ots<input id="fots" type="file" accept=".ots"></label>
+<label class="f">Optional: pick the original file<input id="ffile" type="file"></label>
+<div id="out" aria-live="polite"></div>
+<h2>What it checks</h2>
+<ol><li>The statement has exactly the sit-statement/0.1 fields.</li><li>The Ed25519 signature over the JCS (RFC 8785) form of every field but <code>sig</code> matches the built-in public key.</li><li>sha256 of the .ots equals <code>ots_sha256</code>, and the .ots commits to the statement's sha256.</li><li>Replaying the .ots operations from that hash reaches a Bitcoin attestation at <code>block_height</code>. It prints the merkle root that block must have.</li><li>Optional: sha256 of your original file equals the statement's sha256.</li></ol>
+<p>The last step is yours: compare the printed merkle root with block <span id="bh">N</span> on any block explorer or your own node. That is the only outside fact, and it comes from Bitcoin, not from us. A statement says only that these exact bytes existed by that block: not who made them, not that they are true.</p>
+<script>
+"use strict";
+const KEYS={"0a64aa45b8ce17a7":"GrcQ1ZzlNQAtU8GyezaWCmyFjzjP2NEknvkAd5CQXxc"};
+const DOOR_STATEMENT={"v":"sit-statement/0.1","sha256":"019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f","status":"confirmed","block_height":965906,"block_hash":"00000000000000000001b1d2e4220a0d1600a59bd2d3753743fa3654679b5130","ots_sha256":"0661ce7e66b59e8d594b379f33e7512f7e0e7e3f22ec6d8ab0477a5b15400294","issued_at":"2026-11-22T15:43:53Z","issuer":"soulintime.com","kid":"0a64aa45b8ce17a7","sig":"zhvCuFJVGbow3scYxBseprsS_oEBw5cOOXn5VaFYrfoyFudZRrhi75rety4SjDVGCiEeO9jvrJsaTvxrw4FjBw"};
+const DOOR_OTS_B64="AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIAZvTBWrjX27uP2H8q9qrz+XzdMBxaKfk1vo4qCjLrC/wCGUuvXT6sF7WCPAQCTAghnqv5HJttvIdugDv3gjxIB5NsCrmCuDCOKRVZQLqyjRD45U2uSgCocS7hGa/ctJvCPEgxSiuUrP+fXZoxba37UZ3nRTIBt3jrhurJiNDoY6fxU4I8QRqnnYE8Ajq++U4mMIOGgjwIIOrlgCwfEi3fYNZ2SM65LCbJBVzd44xd1SPTPhYNzL5CPAgG/lEC5CBWKn9LXiPvL78f0mMYCrm6lk/+eT9ZtNuow0I8CB9VjZjSnwr3N73Jhxqb9Rzi3FlbRFuNlSEF/pbXrsmGAjxIIwm9F5XY4Y/xymn3kp1s0BEa5IdAyaBKBuDMzSUir1qCPEgarQLyJYD8AkRh+DeKDv5GBkbh0X6CIvytq9DGuTJL5QI8CAJFvYTGafLb1PxmumBx2htUHE+GKvJeqlLIfJeL98XzwjwIGiXXeq/xNs1W4R9Ckv97fMiY0Tv36HcRhP906UA2xfgCPAgI/dE1dMUWm5t5On3WD4V1o7MfDGYeWq1po39JJF41SkI8CAr+1eZerUkQDCeU5e85Lr+KorBDEGxI+FhEpdNvM56DQjxII/vO2GSww4Lzdgc/jcWhc4bFKbOXGUKCFWJPbiGarvyCPAg5lS1zvLxvJDe2JfNi2v09jw0k9Dyo4ahCIpJomspTtYI8VkBAAAAAQk//oo5I9XwiIQs9U72F9/b8onVitkZi3YGLfcHrSNFAAAAAAD+////Au0uAwAAAAAAFgAUr5W/5F+7ArhR2hMqeMjLIU6r6C4AAAAAAAAAACJqIPAEEb0OAAgI8SApiHkvmB2lvDDWmGtQBMypMNiE1IHzrYPeqYnzZ9nAyAgI8CAApMET/aOBhnAFP8uADQ2kD7/qg6KVvfhVEGUUW63egggI8SDiJFCWv5WVRY2JHnpT+ajjZ6R29n3pQqee5K/GpvYQewgI8SDuviT1aCbh28ud8s/Ibc16BMqs3DtTYUJBXKpEGQQrEQgI8SCxQA0p+XuX51z7XMqAJjrp6PRUU3G9mPkLlozUaNxf9QgI8CBrPIojjFgSsB7EX9pj3/o8SPnC82aYUoMoNUXGUvSy6ggI8CBs3PVkDKm9SRKj1C/QRA+3Frz89FNl4b/ybqKlhkXmEggI8CDbgWjTnJ5urZ7BrBUl+r6iOp+BmkUC5dLoFy9CBApKZwgI8CASojLF6SUST4tnhAnSP+YgCQc1a5s+ljnGKCNiUHhbeAgI8SCra/HGmmsETj4FYfUi0X9T4SjSAoVVK+lY065C8yHtLQgI8SA8PZLYP46T/bFeVurxR83hJLgSOmHJn8FBmsH97SOH9AgI8SA7uVuUbuQYJNkCzqgmopNqG1dKAfbAtytnKwsPDGsnbggIAAWIlg1z1xkBA5L6Og==";
+const $=id=>document.getElementById(id), out=$('out');
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const unhex=h=>new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));
+const b64u=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+const sha256=async b=>new Uint8Array(await crypto.subtle.digest('SHA-256',b));
+const jcs=v=>v===null?'null':typeof v==='string'?JSON.stringify(v):typeof v==='number'?(Number.isSafeInteger(v)?String(v):(()=>{throw Error('non-integer number')})()):typeof v==='boolean'?String(v):(typeof v==='object'&&!Array.isArray(v))?'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+jcs(v[k])).join(',')+'}':(()=>{throw Error('unsupported value')})();
+const HEX=/^[0-9a-f]{64}$/;
+function shape(st){const base=['v','sha256','status','block_height','block_hash','ots_sha256','issued_at','issuer','kid','sig'];const want=(st.status==='refused'?[...base,'reason']:st.priority===true?[...base,'priority']:base).sort();
+ if(JSON.stringify(Object.keys(st).sort())!==JSON.stringify(want))return 'fields mismatch';if(st.v!=='sit-statement/0.1')return 'unknown version';
+ if(!HEX.test(st.sha256)||!HEX.test(st.block_hash)||!Number.isSafeInteger(st.block_height)||st.block_height<=0)return 'bad hash/block';
+ if(st.status==='confirmed')return HEX.test(st.ots_sha256)?null:'confirmed needs ots_sha256';
+ if(st.status==='refused')return st.ots_sha256===null&&['not_found','not_confirmed'].includes(st.reason)?null:'bad refusal';
+ return 'status must be confirmed or refused';}
+// Minimal OpenTimestamps reader: sha256, append, prepend, reverse, fork; Bitcoin and pending attestations.
+const MAGIC=unhex('004f70656e54696d657374616d7073000050726f6f6600bf89e2e884e89294');
+async function replayOts(b){let i=0;const byte=()=>{if(i>=b.length)throw Error('truncated proof');return b[i++]};
+ const varuint=()=>{let v=0,s=0,x;do{x=byte();v+=(x&0x7f)*2**s;s+=7}while(x&0x80);return v};
+ const take=n=>{if(i+n>b.length)throw Error('truncated proof');const r=b.slice(i,i+n);i+=n;return r};
+ const varbytes=()=>take(varuint());
+ for(const m of MAGIC)if(byte()!==m)throw Error('not an OpenTimestamps proof');
+ if(varuint()!==1)throw Error('unsupported .ots version');if(byte()!==0x08)throw Error('only sha256 proofs are read here');
+ const file=take(32);const found=[];let steps=0;
+ const att=(msg)=>{const tag=hex(take(8));const p=varbytes();if(tag==='0588960d73d71901'){let j=0,v=0,s=0,x;do{x=p[j++];v+=(x&0x7f)*2**s;s+=7}while(x&0x80);found.push({height:v,digest:hex(msg)})}};
+ const op=async(tag,msg)=>{if(++steps>2000)throw Error('too many steps');
+  if(tag===0x00)return att(msg),null;
+  if(tag===0xf0){const a=varbytes();const r=new Uint8Array(msg.length+a.length);r.set(msg);r.set(a,msg.length);return r}
+  if(tag===0xf1){const a=varbytes();const r=new Uint8Array(msg.length+a.length);r.set(a);r.set(msg,a.length);return r}
+  if(tag===0xf2)return msg.slice().reverse();
+  if(tag===0x08)return await sha256(msg);
+  throw Error('unsupported step 0x'+tag.toString(16));};
+ const tree=async(msg,d)=>{if(d>256)throw Error('too deep');let tag=byte();
+  while(tag===0xff){const t=byte();const n=await op(t,msg);if(t!==0x00)await tree(n,d+1);tag=byte()}
+  const n=await op(tag,msg);if(tag!==0x00)await tree(n,d+1)};
+ await tree(file,0);return {file:hex(file),bitcoin:found}}
+function line(ok,msg){const p=document.createElement('p');p.className=ok?'pass':'fail';p.textContent=(ok?'PASS ':'FAIL ')+msg;out.appendChild(p);return ok}
+async function verify(st,ots,fileBytes){out.textContent='';let ok=true;const r=(c,m)=>{ok=line(c,m)&&ok};
+ try{if(st&&st.statement)st=st.statement;
+  const e=shape(st);r(!e,'shape sit-statement/0.1'+(e?': '+e:''));if(e)throw Error('stop');
+  $('bh').textContent=st.block_height;
+  if(fileBytes)r(hex(await sha256(fileBytes))===st.sha256,'sha256(your file) equals the statement sha256');
+  const pk=KEYS[st.kid];r(!!pk,'key id '+st.kid+' is the built-in published key');
+  if(pk){const raw=b64u(pk);r(hex(await sha256(raw)).slice(0,16)===st.kid,'kid = first 16 hex of sha256(public key)');
+   let key;try{key=await crypto.subtle.importKey('raw',raw,{name:'Ed25519'},false,['verify'])}catch(x){line(false,'this browser has no Ed25519 in WebCrypto; use the Python or Node verifier');throw Error('stop')}
+   const {sig,...body}=st;r(await crypto.subtle.verify({name:'Ed25519'},key,b64u(sig),new TextEncoder().encode(jcs(body))),'Ed25519 signature over JCS(all fields but sig)')}
+  if(st.status!=='confirmed'){line(true,'signed refusal: not confirmed; never cite a block from it');throw Error('stop')}
+  if(!ots){line(false,'no .ots given');throw Error('stop')}
+  r(hex(await sha256(ots))===st.ots_sha256,'sha256(.ots) = ots_sha256');
+  const rp=await replayOts(ots);r(rp.file===st.sha256,'.ots commits to the statement sha256');
+  const at=rp.bitcoin.find(x=>x.height===st.block_height);r(!!at,'.ots reaches a Bitcoin attestation at block '+st.block_height+(rp.bitcoin.length?' (found: '+rp.bitcoin.map(x=>x.height).join(', ')+')':''));
+  if(at){const root=hex(unhex(at.digest).reverse());const p=document.createElement('pre');p.id='root';p.textContent='Block '+st.block_height+' must have merkle root:\n'+root+'\nand block hash (from the statement):\n'+st.block_hash;out.appendChild(p)}
+ }catch(x){if(x.message!=='stop')ok=line(false,String(x.message||x))&&false}
+ const f=document.createElement('p');f.className='big '+(ok?'pass':'fail');f.id='result';f.textContent='RESULT: '+(ok?'all checks passed':'FAILED');out.appendChild(f);return ok}
+const fileBytes=f=>f?f.arrayBuffer().then(b=>new Uint8Array(b)):Promise.resolve(null);
+$('run').onclick=()=>verify(DOOR_STATEMENT,Uint8Array.from(atob(DOOR_OTS_B64),c=>c.charCodeAt(0)),null);
+async function picked(){const s=$('fst').files[0];if(!s)return;let st;try{st=JSON.parse(await s.text())}catch{out.textContent='';line(false,'that statement file is not JSON');return}
+ verify(st,await fileBytes($('fots').files[0]),await fileBytes($('ffile').files[0]))}
+for(const id of ['fst','fots','ffile'])$(id).onchange=picked;
+if(location.hash==='#run')$('run').click();
+</script></main></body></html>

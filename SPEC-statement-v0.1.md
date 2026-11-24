@@ -128,7 +128,7 @@ Base44, the host, serves functions only at `/functions/<name>`, so these are the
 - `height` is set only when anchored (a real block height and an https `.ots`), never the chain tip. `cite` is set only when a signed statement exists. The create answer never waits for Bitcoin.
 - OpenAPI 3.1: https://soulintime.com/.well-known/openapi-v1.yaml · Docs: https://soulintime.com/api-v1.md
 
-### For Aprve and third parties
+### For apps, agents and AI platforms
 
 Any product can send a SHA-256 from its own users' files and show the answer: no account, no key, CORS open, first statement free, then one fresh hash per network per hour. Store `receipt_id`, poll `apiV1Verify` as `next_action` says, and show the `cite` line once `anchored` is true. The result does not depend on SoulInTime staying online: the signed statement and the `.ots` verify offline with the public key and any Bitcoin node ([verifier](verifier/)). A statement says only that these exact bytes existed by that block; it does not say who made them or that they are true.
 

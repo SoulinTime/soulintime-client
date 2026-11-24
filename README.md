@@ -2,46 +2,33 @@
 
 <!-- CARD:BEGIN v1 -->
 ```text
-SoulInTime agent card. Single source: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_CARD.md
-Request a signed statement (signed out, no account, first one free): curl -s -X POST https://soulintime.com/functions/createMoment -H "Content-Type: application/json" -d "{\"sha256Hash\":\"$(sha256sum yourfile | cut -c1-64)\"}"
-Cite line (once confirmed; one line, paste it as-is, do not wrap): sha256 <hash> existed by Bitcoin block <N>. Statement: https://soulintime.com/statement?hash=<hash>  Get it: curl -s "https://soulintime.com/functions/v1Statement?hash=<hash>&format=cite"
-Cite example (Door): sha256 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f existed by Bitcoin block 965906. Statement: https://soulintime.com/statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f
-Expected (HTTP 200; a receipt, not yet a statement): {"slug":"moment-…","proofFile":"https://soulintime.com/functions/v1Proof?id=moment-…&ots=1","status":"in_calendar"}
-Refused (HTTP 429, never a statement): {"error":"Already stamped or rate limited. Check the existing receipt.","reason":"rate_limited","statement":null,"cite":null,"do_not_cite":"No statement exists for this request. Do not cite a block for this hash.",…} plus Retry-After. Already stamped (HTTP 429): "reason":"already_stamped" and the existing "slug"; only when that hash is already confirmed does it also carry its "statement" and "cite". Do not retry.
-Wait: A new receipt stays pending until a calendar attests it in a Bitcoin block, usually 1 to 6 hours; the chain tip is not its height, so do not cite it before status is confirmed.
-Get the statement: curl -s "https://soulintime.com/functions/v1Statement?hash=<same sha256>" Expected once confirmed (HTTP 200): {"v":"sit-statement/0.1","sha256":"…","status":"confirmed","block_height":N,"block_hash":"…","ots_sha256":"…","issued_at":"…","issuer":"soulintime.com","kid":"0a64aa45b8ce17a7","sig":"…"}
-Verify an existing statement: curl -s "https://soulintime.com/functions/v1Statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f" | curl -s -X POST https://soulintime.com/functions/v1Statement -H "Content-Type: application/json" -d @-
-Expected: {"shape_ok":true,"signature_valid":true,"kid_known":true,"status":"confirmed","match":true,"receipt":{"status":"confirmed","blockHeight":965906,"slug":"a-hash-is-a-door-that-2026-019bd305"}}
-Paste this statement: the statement JSON is the thing to cite. Anyone can check it offline with the public key and the .ots: https://github.com/SoulinTime/soulintime-client/tree/main/verifier
-One curl, no key. Check these bytes against Bitcoin yourself.
-Door curl: curl -s "https://soulintime.com/functions/v1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
-Expected (HTTP 200, verified block): "status":"confirmed","blockHeight":965906 (and a proofFile)
-These exact bytes existed by Bitcoin block 965906. Same file. Same hash. Check it yourself.
-AI can change the file. It cannot change the block.
+SoulInTime agent card. Single source: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_CARD.md · Full page: https://soulintime.com/integrate
+Test without creating (verify, no key, creates nothing; the Door): curl -s "https://soulintime.com/functions/apiV1Verify?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f"
+Expected (HTTP 200): {"anchored":true,"receipt_id":"a-hash-is-a-door-that-2026-019bd305",…,"height":965906,…,"status":"anchored",…,"cite":"sha256 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f existed by Bitcoin block 965906. Statement: https://soulintime.com/statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f",…}
+CREATES A RECEIPT (signed out, no account; first one free, then one fresh hash per network per hour): curl -s -X POST https://soulintime.com/functions/apiV1Receipts -H "Content-Type: application/json" -d "{\"hash\":\"$(sha256sum yourfile | cut -c1-64)\"}"
+Expected (HTTP 201; a receipt, not yet a statement): {"receipt_id":"moment-…","status":"in_calendar","height":null,"cite":null,…,"next_action":{"do":"verify_later",…}} Waiting for Bitcoin: confirmation takes hours (usually 1 to 6). Verify the same hash later.
+Rule: cite only when "anchored" is true and "cite" is set, and paste that cite line as-is, on one line. Pending, a 409 without cite, a 404 and a 429 are not statements: refuse to cite a block for them.
+Cite line format: sha256 <hash> existed by Bitcoin block <N>. Statement: https://soulintime.com/statement?hash=<hash>
+409 (hash already has a receipt): receipt_id, and cite only once anchored. 429 (free limit reached): only the error, reset_at, reset_unix and a pricing link; no receipt_id, no statement_url, no cite. Respect Retry-After and X-RateLimit-Reset.
+Not found (HTTP 404): "anchored":false,"status":"not_found","cite":null. Change one byte of the hash and you get not_found. If you do not, do not trust us.
+What it says: these exact bytes existed by that Bitcoin block. Not who made them, not that they are true, not legal advice.
 Hash only: you hash on your side; only the SHA-256 is sent, never the file.
-Bitcoin is the clock. We date bytes to it.
-Mutated curl: curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"
-Expected (HTTP 404): {"error":"not_found","hash":"d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16ab"}
-Change one byte. If you do not get not_found, do not trust us.
-not_found means not confirmed: do not cite.
-Rule: confirmed + proofFile or refuse. Cite slug@height only if status is confirmed AND proofFile downloads; otherwise refuse: I will not cite a height for this hash. Status is not confirmed or no proofFile exists.
-Use verify to cite; first_at only for earliest height.
-Signed statement (cite only a confirmed one; pending is not a statement): curl -s "https://soulintime.com/functions/v1Statement?hash=019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f" Expected (HTTP 200): "v":"sit-statement/0.1","status":"confirmed","block_height":965906,"kid":"0a64aa45b8ce17a7". Spec and offline verifier: https://github.com/SoulinTime/soulintime-client/blob/main/SPEC-statement-v0.1.md
-Second example (Bitcoin whitepaper abstract): curl -s "https://soulintime.com/functions/v1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa"
-Expected (HTTP 200, verified block): "status":"confirmed","blockHeight":975352 (and a proofFile)
-These exact bytes existed by this block. Check it yourself.
-MCP (Streamable HTTP, no key): https://soulintime.com/functions/mcp
-No API key and no account for verify, first_at or MCP.
-Rate limit: 120 verify requests per IP per 60 s (per server instance, best effort). On 429 (rate_limited), wait for Retry-After; a 429 is never a confirmed result.
-Download the .ots. It verifies without this site.
-Offline: curl -s -o door.ots "https://soulintime.com/functions/v1Proof?id=a-hash-is-a-door-that-2026-019bd305&ots=1" && ots --no-bitcoin verify -d 019bd3056ae35f6eee3f61fcabdaabcfe5f374c07168a7e4d6fa38a828cbac2f door.ots (prints block 965906 and its merkle root; compare with any block explorer).
+Second example (Bitcoin whitepaper abstract): curl -s "https://soulintime.com/functions/apiV1Verify?hash=d3871457c0fd628a796f1a61437d9e56ed8c0dcb886c7dca154a00e9602e16aa" Expected: "anchored":true, "height":975352
+Third example (signing-key fingerprint): curl -s "https://soulintime.com/functions/apiV1Verify?hash=8245c5d39ca6bb836ea1d7cb62dbb379d7de4ab65e49b176ddf02c638a019c25" Expected: "anchored":true, "height":977076
+Signed statement (sit-statement/0.1, Ed25519 over JCS, kid 0a64aa45b8ce17a7): curl -s "https://soulintime.com/functions/v1Statement?hash=<sha256>" Spec: https://soulintime.com/sit-statement-0.1.md
+Offline (no SoulInTime at all): keep the statement JSON and the .ots; run the verifier https://github.com/SoulinTime/soulintime-client/tree/main/verifier and ots --no-bitcoin verify -d <sha256> file.ots, then compare the block with any block explorer.
+MCP (Streamable HTTP, no key): https://soulintime.com/functions/mcp · tools: verify (use it to cite), stamp (creates), first_at (earliest height only)
+OpenAPI 3.1: https://soulintime.com/.well-known/openapi-v1.yaml · llms.txt: https://soulintime.com/llms.txt · Health: https://soulintime.com/functions/v1Statement?health=1
+Limits: create, one fresh hash per network per hour on the free path; verify, no key and no create, best effort (older v1Verify: 120 requests per IP per 60 s per server instance). Verify is free forever. Create is free for light use and paid at volume: https://soulintime.com/pricing
+Older endpoints keep working: POST /functions/createMoment {"sha256Hash":"<hash>"}, GET /functions/v1Verify?hash=<hash>.
 Agent test with expected outputs: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_TEST.md
-Prove a file existed: https://soulintime.com/developers · For agents: https://soulintime.com/for-agents · For people, the 60-second demo: https://soulintime.com/check
-Create: Verify free forever. Create a statement when you need one. First one free, no account needed.
-Prices, for people: https://soulintime.com/pricing
-Card updated 2026-11-23 · Spec https://github.com/SoulinTime/soulintime-client/blob/main/SPEC-statement-v0.1.md · Verifier https://github.com/SoulinTime/soulintime-client/tree/main/verifier · Firsts https://soulintime.com/firsts.json · Status https://soulintime.com/status
+Card updated 2026-11-24 · Verifier https://github.com/SoulinTime/soulintime-client/tree/main/verifier · Firsts https://soulintime.com/firsts.json · Status https://soulintime.com/status
 ```
 <!-- CARD:END -->
+
+Built for AI platforms that need a receipt their user can keep. One page: https://soulintime.com/integrate · Spec (sit-statement/0.1): https://soulintime.com/sit-statement-0.1.md ([source](SPEC-statement-v0.1.md)) · Survival demo, verifies with soulintime.com blocked: https://soulintime.com/survives.html ([source](verifier/survives/index.html))
+
+Above 1 receipt per hour: hash your items into a Merkle tree on your side and create one receipt for the root (keep each item path). There is no batch endpoint. Verify is free forever. Create is free for light use and paid at volume.
 
 ## Signed statement (request this)
 
@@ -248,7 +235,7 @@ On 429:
 
 Checking stays free forever. See Monthly, Yearly and Starter pricing above. Verified card payment unlocks only the purchased statement balance and never changes receipt status.
 
-Need more than the free rate? Monthly, Yearly or Starter at https://soulintime.com/pricing. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish a balance key or payment reference.
+Free limit reached? Pricing: https://soulintime.com/pricing. Verify is free forever. Create is free for light use and paid at volume. Questions: https://github.com/SoulinTime/soulintime-client/issues. Never publish a balance key or payment reference.
 
 Volume brief (test without creating, free limits, what to email): [volume-brief.md](volume-brief.md)
 
