@@ -1,5 +1,7 @@
 # Request a signed statement with one curl: these exact bytes existed by a Bitcoin block.
 
+[![SoulInTime MCP connector](https://glama.ai/mcp/connectors/io.github.MorrisMoe/soulintime/badges/score.svg)](https://glama.ai/mcp/connectors/io.github.MorrisMoe/soulintime)
+
 <!-- CARD:BEGIN v1 -->
 ```text
 SoulInTime agent card. Single source: https://github.com/SoulinTime/soulintime-client/blob/main/AGENT_CARD.md · Full page: https://soulintime.com/integrate
